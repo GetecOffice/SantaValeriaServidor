@@ -22,7 +22,7 @@ def FormualrioOperadores(request):
     
     FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     return render(request, 'Operador/form.html',{
-    'FEstatus': FEstatus,'ultimo_folio': ultimo_folio})
+    'FEstatus': FEstatus,'ultimo_folio': ultimo_folio, 'ServiciosWeb':ServiciosWeb})
 
 def FormualrioMateriasPrimas(request):
     ServiciosWeb = servicioActivo() 
@@ -35,7 +35,7 @@ def FormualrioMateriasPrimas(request):
     FEstatus=tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     FUnidadMedida=tblUnidades.objects.all().order_by('Descripcion')
     return render(request, 'MateriaPrima/form.html',{
-    'ultimo_folio': ultimo_folio, 'FEstatus': FEstatus, 'FUnidadMedida': FUnidadMedida})
+    'ultimo_folio': ultimo_folio, 'FEstatus': FEstatus, 'FUnidadMedida': FUnidadMedida, 'ServiciosWeb':ServiciosWeb})
 
 def FormualrioProductos(request):
     ServiciosWeb = servicioActivo() 
@@ -48,7 +48,7 @@ def FormualrioProductos(request):
     FEstatus=tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     FUnidadMedida=tblUnidades.objects.all().order_by('Descripcion')
     return render(request, 'Producto/form.html',{
-    'ultimo_folio': ultimo_folio, 'FEstatus': FEstatus, 'FUnidadMedida': FUnidadMedida})
+    'ultimo_folio': ultimo_folio, 'FEstatus': FEstatus, 'FUnidadMedida': FUnidadMedida, 'ServiciosWeb':ServiciosWeb})
 
 def FormualrioCorrales(request):
     ServiciosWeb = servicioActivo() 
@@ -61,7 +61,7 @@ def FormualrioCorrales(request):
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
     
     return render(request, 'Corral/form.html',{
-    'ultimo_folio': ultimo_folio, 'FechaDeHoy':FechaDeHoy, 'FEstatus': FEstatus})
+    'ultimo_folio': ultimo_folio, 'FechaDeHoy':FechaDeHoy, 'FEstatus': FEstatus, 'ServiciosWeb':ServiciosWeb})
 
 def FormualrioTolva(request):
     ServiciosWeb = servicioActivo() 
@@ -74,4 +74,4 @@ def FormualrioTolva(request):
     FUnidadMedida=tblUnidades.objects.all().order_by('Descripcion')
     FEstatus = tblEstatus.objects.filter(ID__gte=4, ID__lte=6).order_by('Descripcion')
     return render(request, 'Tolva/form.html',{
-    'ultimo_folio': ultimo_folio,'FEstatus': FEstatus, 'FUnidadMedida': FUnidadMedida})
+    'ultimo_folio': ultimo_folio,'FEstatus': FEstatus, 'FUnidadMedida': FUnidadMedida, 'ServiciosWeb':ServiciosWeb})

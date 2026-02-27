@@ -15,7 +15,7 @@ def editarOperador(request, ID):
     Estatus = TEOperador.IDEstatus.ID
     FiltradoEstatus= tblEstatus.objects.get(ID=Estatus)
     FEEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
-    return render(request, "Operador/edit.html",{'TEOperador': TEOperador,'FiltradoEstatus': FiltradoEstatus,'FEEstatus': FEEstatus})
+    return render(request, "Operador/edit.html",{'TEOperador': TEOperador,'FiltradoEstatus': FiltradoEstatus,'FEEstatus': FEEstatus, 'ServiciosWeb':ServiciosWeb})
 
 # -----------------------------------------------------MATERIAS PRIMAS-----------------------------------------------------
 def editarMateriaPrima(request, ID):
@@ -27,7 +27,7 @@ def editarMateriaPrima(request, ID):
     FiltradoUnidad= tblUnidades.objects.get(ID=Unidad)
     FEEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     FEUnidad = tblUnidades.objects.all().order_by('Descripcion')
-    return render(request, "MateriaPrima/edit.html",{'TEMateriaPrima': TEMateriaPrima,'FiltradoEstatus': FiltradoEstatus,'FiltradoUnidad': FiltradoUnidad,'FEEstatus': FEEstatus,'FEUnidad': FEUnidad})
+    return render(request, "MateriaPrima/edit.html",{'TEMateriaPrima': TEMateriaPrima,'FiltradoEstatus': FiltradoEstatus,'FiltradoUnidad': FiltradoUnidad,'FEEstatus': FEEstatus,'FEUnidad': FEUnidad, 'ServiciosWeb':ServiciosWeb})
 
 # --------------------------------------------------------PRODUCTOS--------------------------------------------------------
 def editarProducto(request, ID):
@@ -39,7 +39,7 @@ def editarProducto(request, ID):
     FiltradoUnidad= tblUnidades.objects.get(ID=Unidad)
     FEEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
     FEUnidad = tblUnidades.objects.all().order_by('Descripcion')
-    return render(request, "Producto/edit.html",{'TEProductos': TEProductos,'FiltradoEstatus': FiltradoEstatus,'FiltradoUnidad': FiltradoUnidad,'FEEstatus': FEEstatus,'FEUnidad': FEUnidad})
+    return render(request, "Producto/edit.html",{'TEProductos': TEProductos,'FiltradoEstatus': FiltradoEstatus,'FiltradoUnidad': FiltradoUnidad,'FEEstatus': FEEstatus,'FEUnidad': FEUnidad, 'ServiciosWeb':ServiciosWeb})
 
 def editarProductoReceta(request, ID):
     ServiciosWeb = servicioActivo() 
@@ -59,7 +59,7 @@ def editarProductoReceta(request, ID):
         total = total_porcentaje['Porcentaje__sum']  - proporcion
     print(total)
     return render(request, "Producto/editReceta.html",{ 'total':total, 
-    'TRecetas': TRecetas, 'FiltradoMateriaPrima': FiltradoMateriaPrima, 'FEMateriaPrima': FEMateriaPrima })
+    'TRecetas': TRecetas, 'FiltradoMateriaPrima': FiltradoMateriaPrima, 'FEMateriaPrima': FEMateriaPrima, 'ServiciosWeb':ServiciosWeb })
 
 # --------------------------------------------------------CORRALES---------------------------------------------------------
 def editarCorral(request, ID):
@@ -69,7 +69,7 @@ def editarCorral(request, ID):
     fecha = TECorrales.Fecha
     FiltradoEstatus= tblEstatus.objects.get(ID=Estatus)
     FEEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
-    return render(request, "Corral/edit.html",{'fecha':fecha, 'TECorrales': TECorrales,'FiltradoEstatus': FiltradoEstatus,'FEEstatus': FEEstatus})
+    return render(request, "Corral/edit.html",{'fecha':fecha, 'TECorrales': TECorrales,'FiltradoEstatus': FiltradoEstatus,'FEEstatus': FEEstatus, 'ServiciosWeb':ServiciosWeb})
 
 # ------------------------------------------------------TOLVA------------------------------------------------------
 def editarTolva(request, ID):
@@ -82,4 +82,4 @@ def editarTolva(request, ID):
     FEEstatus = tblEstatus.objects.filter(ID__gte=4, ID__lte=6)
     FEUnidades = tblUnidades.objects.all()
     return render(request, "Tolva/edit.html",{ 'FEUnidades':FEUnidades, 
-        'TETolva': TETolva,'FiltradoEstatus': FiltradoEstatus,'FEEstatus': FEEstatus, 'FiltradoUnidad':FiltradoUnidad})
+        'TETolva': TETolva,'FiltradoEstatus': FiltradoEstatus,'FEEstatus': FEEstatus, 'FiltradoUnidad':FiltradoUnidad, 'ServiciosWeb':ServiciosWeb})

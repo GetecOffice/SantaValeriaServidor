@@ -12,14 +12,14 @@ from Aplicacion.views import servicioActivo
 def TablaOperadores(request):
     ServiciosWeb = servicioActivo()     
     TOperadores = tblOperadores.objects.values('ID', 'Clave', 'Descripcion', 'IDEstatus_id__Descripcion')
-    return render(request, 'Operador/index.html',{'TOperadores': TOperadores})
+    return render(request, 'Operador/index.html',{'TOperadores': TOperadores, 'ServiciosWeb':ServiciosWeb})
 
 # -----------------------------------------------------MATERIAS PRIMAS-----------------------------------------------------
 def TablaMateriasPrimas(request):
     ServiciosWeb = servicioActivo()     
     TMateriasPrimas = tblMateriaPrima.objects.values('ID', 'Clave', 'Descripcion', 'IDEstatus_id__Descripcion',
                                                      'IDUnidadMedida_id__Abreviacion','PrecioUnitario','Merma')
-    return render(request, 'MateriaPrima/index.html',{'TMateriasPrimas': TMateriasPrimas})
+    return render(request, 'MateriaPrima/index.html',{'TMateriasPrimas': TMateriasPrimas, 'ServiciosWeb':ServiciosWeb})
 
 # --------------------------------------------------------PRODUCTOS--------------------------------------------------------
 def AgregarRecetas(request, ID):
@@ -49,7 +49,7 @@ def AgregarRecetas(request, ID):
     
     return render(request, "Producto/agregar.html",{'AgRecetas': AgRecetas, 
     'FiltradoEstatus':FiltradoEstatus, 'FiltradoUnidad':FiltradoUnidad, 'folioID':folioID,
-    'FMateriaPrima':FMateriaPrima, 'Recetas':Recetas, 'total':total})
+    'FMateriaPrima':FMateriaPrima, 'Recetas':Recetas, 'total':total, 'ServiciosWeb':ServiciosWeb})
 
 def detalleRecetas(request, ID):
     ServiciosWeb = servicioActivo()     
@@ -57,23 +57,23 @@ def detalleRecetas(request, ID):
     folio = AgMovimientos.Clave
     Recetas = tblReceta.objects.filter(Folio=folio).values('ID', 'Folio',
     'IDMateriaPrima_id__Descripcion', 'Merma', 'Porcentaje')
-    return render(request, 'Producto/verDetalle.html',{'Recetas': Recetas})
+    return render(request, 'Producto/verDetalle.html',{'Recetas': Recetas, 'ServiciosWeb':ServiciosWeb})
 
 def TablaProductos(request):
     ServiciosWeb = servicioActivo()     
     TProductos = tblProductos.objects.values('ID', 'Clave', 'Descripcion', 'IDEstatus_id__Descripcion',
                                             'IDUnidadMedida_id__Abreviacion','PrecioUnitario','SeSirve').exclude(ID=1)
-    return render(request, 'Producto/index.html',{'TProductos': TProductos})
+    return render(request, 'Producto/index.html',{'TProductos': TProductos, 'ServiciosWeb':ServiciosWeb})
 
 # --------------------------------------------------------CORRALES---------------------------------------------------------
 def TablaCorrales(request):
     ServiciosWeb = servicioActivo()     
     TCorrales = tblCorrales.objects.values('ID', 'Clave', 'Descripcion', 'IDEstatus_id__Descripcion','Fecha')
-    return render(request, 'Corral/index.html',{'TCorrales': TCorrales})
+    return render(request, 'Corral/index.html',{'TCorrales': TCorrales, 'ServiciosWeb':ServiciosWeb})
 
 def TablaTolva(request):
     ServiciosWeb = servicioActivo()     
     TTolva = tblTolva.objects.exclude(ID = 1).values('ID', 'Clave', 'Marca', 'Modelo', 'UdeM_id__Abreviacion', 
             'Capacidad', 'IDEstatus_id__Descripcion', 'Alias')
     return render(request, 'Tolva/index.html',{
-    'TTolva': TTolva})
+    'TTolva': TTolva, 'ServiciosWeb':ServiciosWeb})

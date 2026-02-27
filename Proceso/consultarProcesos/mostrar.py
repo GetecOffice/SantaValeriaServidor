@@ -10,36 +10,38 @@ from Aplicacion.models import *
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.db.models import F, FloatField, ExpressionWrapper, Value
-
+from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # -------------------------------------------------SERVIDOS ANIMALES---------------------------------------------------
 def TablaSolicitudServido(request):
+    ServiciosWeb = servicioActivo() 
     TServidos = tblRepartidor.objects.filter(Q(IDEstatus_id =3) | Q(IDEstatus_id=9)).values('ID', 'Folio',
         'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
         'CantidadSolicitada', 'CantidadServida','Fecha', 'FechaServida'
     )
-    return render(request, 'SolicitudServido/index.html',{'TServidos': TServidos })
+    return render(request, 'SolicitudServido/index.html',{'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
 
 def TablaServidoCorral(request):
-    
+    ServiciosWeb = servicioActivo() 
     TServidos = tblRepartidor.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
     'CantidadSolicitada', 'CantidadServida', 'Fecha', 'FechaServida'
     )
     
-    return render(request, 'ServidoListo/index.html',{'TServidos': TServidos })
+    return render(request, 'ServidoListo/index.html',{'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
 
 def TablaFormuladoCorral(request):
-    
+    ServiciosWeb = servicioActivo() 
     TFormulado = tblFormulado.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDMateriaPrima_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion', 'IDTolva_id__Alias',
     'CantidadSolicitada', 'CantidadServida', 'Fecha', 'FechaServida'
     )
     
-    return render(request, 'FormuladoListo/index.html',{'TFormulado': TFormulado })
+    return render(request, 'FormuladoListo/index.html',{'TFormulado': TFormulado, 'ServiciosWeb':ServiciosWeb })
 
 def TablaTolvaServido(request, ID, Estatus, Producto):
+    
     servido = tblRepartidor.objects.get(Folio=ID)
     producto = servido.IDProducto
     estatus = Estatus
@@ -49,6 +51,7 @@ def TablaTolvaServido(request, ID, Estatus, Producto):
     return redirect('proceso:FT-Consolidacion', Producto)
 
 def TablaTolvaServidoCorral(request):
+    ServiciosWeb = servicioActivo() 
     estatusSirve = request.POST.get('estatus', '')
     folio = request.POST.get('folio', '')
     IDProd = request.POST.get('IDProd', '')
@@ -81,9 +84,10 @@ def TablaTolvaServidoCorral(request):
             messages.success(request, f'El producto  a sido servido en el corral')
         
         
-    return render(request, 'ServidosConsolidacion/tolva.html',{'TServidos':TServidos})
+    return render(request, 'ServidosConsolidacion/tolva.html',{'TServidos':TServidos, 'ServiciosWeb':ServiciosWeb})
 
 def TablaTolva(request):
+    ServiciosWeb = servicioActivo() 
     tolva = request.POST.get('tolva', '')
 
     if tolva is not None and tolva != '':
@@ -105,9 +109,10 @@ def TablaTolva(request):
     
     
     return render(request, 'ServidosConsolidacion/tolva.html',{
-         'TServidos':TServidos, 'tolva':tolvas})
+         'TServidos':TServidos, 'tolva':tolvas, 'ServiciosWeb':ServiciosWeb})
 
 def TablaFiltroServido(request):
+    ServiciosWeb = servicioActivo() 
     producto = request.POST.get('producto', '')
     tolva = request.POST.get('tolva', '')
     if producto is not None and producto != '':
@@ -158,7 +163,7 @@ def TablaFiltroServido(request):
 
         return render(request, 'ServidoConsolidacion/index.html',{'producto_tolva':producto_tolva,
          'FiltroServidos':FiltroServidos, 'STolva':STolva, 'TTolva1':TTolva1, 'Filtradounidad':Filtradounidad, 
-        'FiltradoProducto':FiltradoProducto,'FiltradoTolva':FiltradoTolva, 'TConsolidacion': TConsolidacion})
+        'FiltradoProducto':FiltradoProducto,'FiltradoTolva':FiltradoTolva, 'TConsolidacion': TConsolidacion, 'ServiciosWeb':ServiciosWeb})
     else:
         FiltradoProducto= tblProductos.objects.filter(ID=1).first()
         FiltradoTolva= tblTolva.objects.filter(ID=2).first()
@@ -199,9 +204,10 @@ def TablaFiltroServido(request):
         
     return render(request, 'ServidoConsolidacion/index.html',{
      'FiltroServidos':FiltroServidos, 'TTolva1':TTolva1,  'FiltradoTolva':FiltradoTolva, 'TTolva': TTolva, 'TServido':TServido, 'TFormulado':TFormulado,
-    'FiltradoProducto':FiltradoProducto, 'STolva':STolva, 'TConsolidacion': TConsolidacion})
+    'FiltradoProducto':FiltradoProducto, 'STolva':STolva, 'TConsolidacion': TConsolidacion, 'ServiciosWeb':ServiciosWeb})
 
 def TablaConsolidacionServido(request):
+    ServiciosWeb = servicioActivo()
     resultados = tblRepartidor.objects.filter(IDEstatus_id =3).values('IDProducto_id__Descripcion','IDProducto_id').annotate(total_cantidad=Sum('CantidadSolicitada'))
     TConsolidacion = []  # Crear una lista vacía para almacenar los resultados
 
@@ -244,9 +250,10 @@ def TablaConsolidacionServido(request):
     
     return render(request, 'ServidosConsolidacion/index.html', {
     'TConsolidacion': TConsolidacion,  'TTolva1':TTolva1, 
-    'TTolva2':TTolva2, 'TTolva3':TTolva3, 'STolva': STolva, 'FiltroServidos':FiltroServidos})
+    'TTolva2':TTolva2, 'TTolva3':TTolva3, 'STolva': STolva, 'FiltroServidos':FiltroServidos, 'ServiciosWeb':ServiciosWeb})
 
 def TablaServidoAnimales(request):
+    ServiciosWeb = servicioActivo()
     Prioridad = request.POST.get('prioridad', '')
     if Prioridad is not None and Prioridad != '':
         TServidos = tblRepartidor.objects.filter(Q(Prioridad = Prioridad) & Q(IDEstatus_id = 7)).values('ID', 'Folio',
@@ -259,16 +266,18 @@ def TablaServidoAnimales(request):
         'CantidadSolicitada', 'CantidadServida', 'Fecha'
     )
     
-    return render(request, 'ServidoManual/index.html',{'TServidos': TServidos })
+    return render(request, 'ServidoManual/index.html',{'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
 
 def TablaFormuladoManual(request):
+    ServiciosWeb = servicioActivo()
     TFormulado = tblFormulado.objects.filter(Q(IDEstatus_id=3) | Q(IDEstatus_id=7) | Q(IDEstatus_id=9)).values('ID', 'Folio','IDTolva_id__Alias',
         'IDProducto_id__Descripcion','IDEstatus_id__Descripcion','IDMateriaPrima_id__Descripcion',
         'CantidadSolicitada', 'CantidadServida', 'Fecha')
   
-    return render(request, 'FormuladoManual/index.html',{'TFormulado': TFormulado })
+    return render(request, 'FormuladoManual/index.html',{'TFormulado': TFormulado, 'ServiciosWeb':ServiciosWeb })
 
 def TablaCargamentoTolva(request):
+    ServiciosWeb = servicioActivo()
     TTolva = tblTolva.objects.exclude(ID=1).values('ID', 'Alias', 'IDProducto_id__Descripcion', 'IDEstatus_id__Descripcion', 'IDEstatus_id', 'IDProducto_id')
     TServido = tblRepartidor.objects.filter(IDEstatus = 8).values('ID', 'Folio',
     'IDCorral_id__Descripcion','IDProducto_id','IDEstatus_id__Descripcion',
@@ -278,17 +287,19 @@ def TablaCargamentoTolva(request):
     'IDMateriaPrima__Descripcion','IDProducto_id','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
     'CantidadSolicitada'
     )
-    return render(request, 'TolvaProcesos/index.html',{'TTolva': TTolva, 'TServido':TServido, 'TFormulado':TFormulado })
+    return render(request, 'TolvaProcesos/index.html',{'TTolva': TTolva, 'TServido':TServido, 'TFormulado':TFormulado, 'ServiciosWeb':ServiciosWeb })
 
 
 def TablaConsolidacionFormulado(request):
+    ServiciosWeb = servicioActivo()
     SProducto = tblProductos.objects.all().values('ID', 'Descripcion').exclude(ID=1)
     STolva = tblTolva.objects.exclude(ID = 1).all()
     FiltradoProducto= tblProductos.objects.filter(ID=1).first()
     FiltradoTolva= tblTolva.objects.filter(ID=2).first()
-    return render(request, 'FormulacionConsolidacion/index.html', {'STolva': STolva, 'SProducto':SProducto, 'FiltradoTolva':FiltradoTolva, 'FiltradoProducto':FiltradoProducto})
+    return render(request, 'FormulacionConsolidacion/index.html', {'STolva': STolva, 'SProducto':SProducto, 'FiltradoTolva':FiltradoTolva, 'FiltradoProducto':FiltradoProducto, 'ServiciosWeb':ServiciosWeb})
 
 def TablaFiltroFormulado(request):
+    ServiciosWeb = servicioActivo()
     producto = request.POST.get('producto', '')
     tolva = request.POST.get('tolva', '')
     cantidadInp = float(request.POST.get('cantidad', 0))
@@ -335,7 +346,7 @@ def TablaFiltroFormulado(request):
             batch += 1
 
         return render(request, 'FormulacionConsolidacion/index.html',{ 'FiltradoReceta':resultado, 'SProducto':SProducto, 'FechaDeHoy':FechaDeHoy,
-          'STolva':STolva, 'FiltradoProducto':FiltradoProducto,'FiltradoTolva':FiltradoTolva, 'cantidad':cantidadInp, 'ultimo_folio':ultimo_folio, 'restante':restante})
+          'STolva':STolva, 'FiltradoProducto':FiltradoProducto,'FiltradoTolva':FiltradoTolva, 'cantidad':cantidadInp, 'ultimo_folio':ultimo_folio, 'restante':restante, 'ServiciosWeb':ServiciosWeb})
     else:
         FiltradoProducto = tblProductos.objects.filter(ID = 1).first()
         FiltradoTolva = tblTolva.objects.filter(ID = 2).first()
@@ -343,9 +354,10 @@ def TablaFiltroFormulado(request):
         cantidad = 0
     
     return render(request, 'FormulacionConsolidacion/index.html',{'FiltradoTolva':FiltradoTolva, 'FechaDeHoy':FechaDeHoy,
-    'FiltradoProducto':FiltradoProducto, 'STolva':STolva, 'cantidad':cantidad, 'ultimo_folio':ultimo_folio, 'restante':restante})
+    'FiltradoProducto':FiltradoProducto, 'STolva':STolva, 'cantidad':cantidad, 'ultimo_folio':ultimo_folio, 'restante':restante, 'ServiciosWeb':ServiciosWeb})
 
 def TablaFiltroFormulado1(request):
+    ServiciosWeb = servicioActivo()
     producto = request.POST.get('producto', '')
     tolva = request.POST.get('tolva', '')
     cantidadInp = float(request.POST.get('cantidad', 0))
@@ -379,7 +391,7 @@ def TablaFiltroFormulado1(request):
         ).values( 'ID', 'Folio', 'IDMateriaPrima_id__Descripcion', 'IDMateriaPrima_id', 'Merma', 'Porcentaje', 'cantidad_porcentaje', 'cantidad_restante'))
         
         return render(request, 'FormulacionConsolidacion/index.html',{ 'FiltradoReceta':FiltradoReceta, 'SProducto':SProducto, 'FechaDeHoy':FechaDeHoy,
-          'STolva':STolva, 'FiltradoProducto':FiltradoProducto,'FiltradoTolva':FiltradoTolva, 'cantidad':cantidadInp, 'ultimo_folio':ultimo_folio, 'restante':restante})
+          'STolva':STolva, 'FiltradoProducto':FiltradoProducto,'FiltradoTolva':FiltradoTolva, 'cantidad':cantidadInp, 'ultimo_folio':ultimo_folio, 'restante':restante, 'ServiciosWeb':ServiciosWeb})
     else:
         FiltradoProducto= tblProductos.objects.filter(ID=1).first()
         FiltradoTolva= tblTolva.objects.filter(ID=2).first()
@@ -387,4 +399,4 @@ def TablaFiltroFormulado1(request):
         cantidad= 0
     
     return render(request, 'FormulacionConsolidacion/index.html',{'FiltradoTolva':FiltradoTolva, 'FechaDeHoy':FechaDeHoy,
-    'FiltradoProducto':FiltradoProducto, 'STolva':STolva, 'cantidad':cantidad, 'ultimo_folio':ultimo_folio, 'restante':restante})
+    'FiltradoProducto':FiltradoProducto, 'STolva':STolva, 'cantidad':cantidad, 'ultimo_folio':ultimo_folio, 'restante':restante, 'ServiciosWeb':ServiciosWeb})

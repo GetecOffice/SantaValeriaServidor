@@ -2,12 +2,13 @@ from django.shortcuts import render
 # LLAMAR ARCHIVOS LOCALES
 from Aplicacion.forms import *
 from Aplicacion.models import *
+from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EDITAR FORMULARIO PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # --------------------------------------------------------SERVIDOS--------------------------------------------------------
 # --------------------------------------------------------CORRALES---------------------------------------------------------
 def editarSolicitudServidos(request, ID):
-    
+    ServiciosWeb = servicioActivo() 
     TEServidos= tblRepartidor.objects.get(ID=ID)
     Estatus = TEServidos.IDEstatus.ID
     Producto = TEServidos.IDProducto.ID
@@ -23,10 +24,10 @@ def editarSolicitudServidos(request, ID):
     return render(request, "SolicitudServido/edit.html",{'TEServidos': TEServidos, 'fecha':fecha,
     'FiltradoEstatus': FiltradoEstatus,'FiltradoProducto': FiltradoProducto,
     'FiltradoCorral': FiltradoCorral,'FECorral': FECorral,'FEProducto': FEProducto, 'fechaServida':fechaServida,
-    'FEEstatus': FEEstatus,})
+    'FEEstatus': FEEstatus, 'ServiciosWeb':ServiciosWeb})
 
 def editarServidosManuales(request, ID):
-    
+    ServiciosWeb = servicioActivo() 
     TEServidos= tblRepartidor.objects.get(ID=ID)
     Estatus = TEServidos.IDEstatus.ID
     Producto = TEServidos.IDProducto.ID
@@ -42,5 +43,5 @@ def editarServidosManuales(request, ID):
     return render(request, "Servido Manual/edit.html",{'TEServidos': TEServidos, 'fecha':fecha,
     'FiltradoEstatus': FiltradoEstatus,'FiltradoProducto': FiltradoProducto,
     'FiltradoCorral': FiltradoCorral,'FECorral': FECorral,'FEProducto': FEProducto, 'fechaServida':fechaServida,
-    'FEEstatus': FEEstatus,})
+    'FEEstatus': FEEstatus, 'ServiciosWeb':ServiciosWeb})
 

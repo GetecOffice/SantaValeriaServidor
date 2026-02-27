@@ -5,9 +5,9 @@ from django.utils import timezone
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.db.models import Q
-
+from Aplicacion.views import servicioActivo
 def FormularioSolicitudServido(request):
-    
+    ServiciosWeb = servicioActivo() 
     ultimo_contacto = tblRepartidor.objects.order_by('-ID').first()
     if ultimo_contacto:
         ultimo_folio = ultimo_contacto.ID + 1
@@ -21,10 +21,10 @@ def FormularioSolicitudServido(request):
 
     
     return render(request, 'SolicitudServido/form.html',{  'FECorrales': FECorrales, 'ultimo_folio':ultimo_folio,
-    'FechaDeHoy':FechaDeHoy, 'FEstatus': FEstatus, 'FEProductos':FEProductos})
+    'FechaDeHoy':FechaDeHoy, 'FEstatus': FEstatus, 'FEProductos':FEProductos, 'ServiciosWeb':ServiciosWeb})
 
 def FormularioServidoAnimales(request):
-    
+    ServiciosWeb = servicioActivo() 
     ultimo_contacto = tblRepartidor.objects.order_by('-ID').first()
     if ultimo_contacto:
         ultimo_folio = ultimo_contacto.ID + 1
@@ -37,4 +37,4 @@ def FormularioServidoAnimales(request):
     
     
     return render(request, 'Procesos/Servido Manual/form.html',{  'FECorrales': FECorrales, 'ultimo_folio':ultimo_folio,
-    'FechaDeHoy':FechaDeHoy,  'FEstatus': FEstatus, 'FEProductos':FEProductos})
+    'FechaDeHoy':FechaDeHoy,  'FEstatus': FEstatus, 'FEProductos':FEProductos, 'ServiciosWeb':ServiciosWeb})
