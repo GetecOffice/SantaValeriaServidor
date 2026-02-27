@@ -1,0 +1,93 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+
+            </div>
+            <div class="modal-body">
+                <div class="card m-4 p-5">
+                    <form action="{% url 'proceso:FT_Consolidacion' %}" method="POST">{% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mb-3">
+                                <h6 class="h6-form">Seleccione el producto</h6>
+                                <select name="producto" class="select2 form-control" required>
+                                    <option value="{{FiltradoProducto.ID}}">
+                                        -------{{FiltradoProducto.Descripcion}}-------
+                                    </option>
+                                    {% for consolidacion in TConsolidacion %}
+                                    <option value="{{ consolidacion.IDProducto }}">
+                                        {{ consolidacion.Producto }} - - - Cantidad pendiente:
+                                        {{ consolidacion.cantidad }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mb-3">
+                                <h6 class="h6-form">Seleccione tolva disponible</h6>
+                                <select name="tolva" class="select2 form-control" required>
+                                    {% if FiltradoTolva.IDProducto_id == FiltradoProducto.ID or
+                                    FiltradoTolva.IDProducto_id == 1%}
+                                    <option value="{{FiltradoTolva.ID}}">
+                                        -------{{FiltradoTolva.Alias}}-------
+                                    </option>
+                                    {% else %}
+                                    <option value="1">La Tolva no se encuentra disponible</option>
+                                    {% endif %}
+                                    {% for tolva in STolva %}
+                                    {% if tolva.IDProducto_id == FiltradoProducto.ID or tolva.IDProducto_id == 1 %}
+                                    <option value="{{ tolva.ID }}">
+                                        {{ tolva.Alias }}
+                                    </option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 mb-3">
+                                <h6 class="h6-form">Buscar</h6>
+                                <button type="submit" class="btn btn-light w-100"><i class="bi bi-search"></i></button>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 mb-3">
+
+                            </div>
+                        </div>
+                    </form>
+
+                    {% if FiltradoTolva.ID != 1 %}
+                    <div class="row centrar">
+                        <div style="width: 20%;">
+                            <h6 class="h6-form">Cantidad en {{FiltradoTolva.Alias}}</h6>
+                            <h6 class="h6-form">{{ TTolva1.0.cantidad }} {{Filtradounidad.Abreviacion}}</h6>
+                        </div>
+                        <div style="width: 20%;">
+                            <h6 class="h6-form">Cantidad seleccionada</h6>
+                            <h6 class="h6-form"><span id="suma">0</span> {{Filtradounidad.Abreviacion}}
+                            </h6>
+                        </div>
+                        <div style="width: 20%;">
+                            <h6 class="h6-form">Cantidad total</h6>
+                            <h6 class="h6-form"><span id="sumaSelect">0</span>
+                                {{Filtradounidad.Abreviacion}} de
+                                {{FiltradoTolva.Capacidad}} {{Filtradounidad.Abreviacion}}</h6>
+                        </div>
+
+                        <div style="width: 20%;">
+                            <h6 class="h6-form">Enviar a {{FiltradoTolva.Alias}}</h6>
+                            <button id="boton-guardar" class="btn btn-success" style="width: 100%;">
+                                <i class="fas fa-arrow-alt-circle-right"></i>
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

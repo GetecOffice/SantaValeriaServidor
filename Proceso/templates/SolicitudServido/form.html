@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}CLIENTE{% endblock %}
+{% block body %}
+<!--**********************************
+            Content body start
+        ***********************************-->
+{% block head %}CATALOGO{% endblock %}
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row" style="padding-right: 0 !important;">
+            <div class="col-sm-12 col-xl-12 col-xxl-12" style="padding-right: 0 !important;">
+                <div class="card">
+
+                    <div class="card-header d-block d-sm-flex border-0">
+                            <h4 class="card-title mb-2">
+                                <a href="{% url 'proceso:T_Solicitud_Servidos'%}">
+                                    <i class="bi bi-arrow-left-circle text-black fs-28"></i>
+                                </a>
+                                <b>FORMULARIO SOLICITUD SERVIDO</b>
+                            </h4>
+                    </div>
+                    <hr>
+                    <div class="card-body tab-content px-4 pt-2">
+                        <div class="tab-pane active show fade" id="monthly" role="tabpanel">
+                            <form action="{% url 'proceso:G_Solicitud_Servidos' %}" method="POST" autocomplete="off">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="row">
+                                        <input type="hidden" class="form-control" name="folio" value="{{ ultimo_folio }}">
+                                        <input type="hidden" class="form-control" name="tecnico" value="{{ user.first_name }} {{user.last_name}}">
+                                        <input type="hidden" class="form-control" name="peticion" value="1">
+                                        <div class="col-sm-12 col-md-12 col-lg col-xl mb-3">
+                                            <h6 class="h6-form">CORRAL *</h6>
+                                            <select class="select2 form-control" style="width: 100%;" name="corral"
+                                                id="corral-select" required>
+                                                {% if SelectCorral %}
+                                                <option value="{{ SelectCorral.ID }}">
+                                                    ---------{{ SelectCorral.Descripcion }}---------
+                                                </option>
+                                                {% for Corrales in FECorrales %}
+                                                <option value="{{ Corrales.ID }}">{{ Corrales.Descripcion }}</option>
+                                                {% endfor %}
+                                                {% else %}
+                                                <option value="">SELECCIONE UN CORRAL</option>
+                                                {% for Corrales in FECorrales %}
+                                                <option value="{{ Corrales.ID }}">{{ Corrales.Descripcion }}</option>
+                                                {% endfor %}
+                                                {% endif %}
+                                            </select>
+                                        </div>
+
+                                        <div class="col-sm-12 col-md-12 col-lg col-xl mb-3">
+                                            <h6 class="h6-form">PRODUCTO *</h6>
+                                            <select class="select2 form-control col-12" name="producto" required>
+                                                {% if SelectProducto %}
+                                                <option value="{{ SelectProducto.ID }}">
+                                                    ---------{{ SelectProducto.Descripcion }}---------
+                                                </option>
+                                                {% for Producto in FEProductos %}
+                                                <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}</option>
+                                                {% endfor %}
+                                                {% else %}
+                                                <option value="">SELECCIONE UN PRODUCTO</option>
+                                                {% for Producto in FEProductos %}
+                                                <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}</option>
+                                                {% endfor %}
+                                                {% endif %}
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-sm-12 col-md-12 col-lg col-xl mb-3">
+                                            <h6 class="h6-form">CANTIDAD SOLICITADA *</h6>
+                                            <input type="number" name="cantidadSol" class="form-control input"
+                                                placeholder="Ingrese la cantidad solicitada (obligatorio)" required
+                                                step="0.01">
+                                        </div>
+
+                                    </div>
+                                    <input type="hidden" name="cantidadSer" value="0">
+                                    <input type="hidden" name="prioridad" value="Media">
+                                    <input type="hidden" name="estatus" value="3">
+                                    <input type="hidden" name="fechaSol" value="{{FechaDeHoy}}">
+                                    <input type="hidden" name="fechaSer" value="{{FechaDeHoy}}">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary agregarBoton" name="agregar"
+                                        id="agregarBoton">Guardar
+                                        y agregar otro</button>
+                                    <button type="submit" class="btn btn-success salirBoton" name="salir"
+                                        id="salirBoton">Guardar y
+                                        salir</button>
+                                    <a href="{% url 'proceso:T_Solicitud_Servidos' %}">
+                                        <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#corral-select').change(function () {
+            var corralId = $(this).val();
+            var url = '/obtener_clientes/' + corralId + '/';
+            console.log(corralId)
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $('#cliente-select').empty();
+
+                    $.each(data.clientes, function (index, cliente) {
+                        $('#cliente-select').append('<option value="' + cliente.ID + '">' + cliente.Nombre + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}

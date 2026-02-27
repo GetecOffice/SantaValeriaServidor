@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SERVIDOS{% endblock %}
+{% block body %}
+<!--**********************************
+            Content body start
+        ***********************************-->
+{% block head %}PROCESO: SERVIDO{% endblock %}
+<style>
+    .header-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .header-right {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+
+        .header-flex {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-right {
+            width: 100%;
+        }
+
+        .header-right button {
+            width: 100%;
+        }
+    }
+</style>
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row" style="padding-right: 0 !important;">
+            <div class="col-sm-12 col-xl-12 col-xxl-12" style="padding-right: 0 !important;">
+                <div class="card">
+
+                    <div class="card-header border-0 header-flex">
+
+                        <div class="header-left">
+                            <h4 class="card-title mb-0">
+                                <a href="{% url 'aplicacion:Menu_Presentacion' %}#Proceso">
+                                    <i class="bi bi-arrow-left-circle text-black fs-28"></i>
+                                </a>
+                                <b>SERVIDOS:</b> - CAPTURA MANUAL
+                            </h4>
+                        </div>
+
+                        <div class="header-right">
+                            <button id="boton-guardar" class="btn btn-success">
+                                Guardar servidos
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="card-body tab-content p-0">
+                        <div class="card-tabs my-5 mt-sm-0 px-5 mx-3">
+                            <ul class="nav nav-tabs w-100 d-flex justify-content-between">
+                                <li class="nav-item">
+                                    <a href="{% url 'proceso:T_Solicitud_Servidos' %}" class="nav-link">Corrales
+                                        pendientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'proceso:FT_Consolidacion' %}" class="nav-link">Cargar en tolva</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active">Captura manual</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'proceso:T_Corrales_Servidos' %}" class="nav-link">Corrales
+                                        servidos</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane active show fade mx-3" id="monthly" role="tabpanel">
+                            <form id="miFormulario"  action="{% url 'proceso:Cantidad_servidos_manuales' %}" method="POST">{% csrf_token %}
+                                <input type="hidden" class="form-control" name="tecnico"
+                                    value="{{ user.first_name }} {{user.last_name}}">
+
+
+                                <div class="table-responsive">
+                                    <table class="table table-responsive-md card-table transactions-table" id="miTabla">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    FOLIO
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CLIENTE
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CORRAL
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    PRODUCTO
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    TOLVA
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CANTIDAD
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CANTIDAD SERVIDA
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    FECHA
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    FECHA SERVIDA
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for Dato in TServidos %}
+                                            <tr>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.Folio}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.IDCliente_id__Nombre}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.IDCorral_id__Descripcion}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.IDProducto_id__Descripcion}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.IDTolva_id__Alias}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.CantidadSolicitada}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" name="id[]" value="{{Dato.ID}}">
+                                                    <input type="number" name="cantidadSer[]" class="form-control input"
+                                                        value="{{Dato.CantidadServida}}">
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.Fecha}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.FechaServida}}
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  
+    document.getElementById("boton-guardar").addEventListener("click", function () {
+        // Captura el clic en el botón fuera del formulario
+        document.getElementById("miFormulario").submit(); // Envía el formulario manualmente
+    });
+</script>
+{% endblock %}

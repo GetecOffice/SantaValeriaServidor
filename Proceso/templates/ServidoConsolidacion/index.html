@@ -1,0 +1,672 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SERVIDOS{% endblock %}
+{% block body %}
+<!--**********************************
+            Content body start
+        ***********************************-->
+{% block head %}PROCESO: SERVIDO{% endblock %}
+<style>
+    th,
+    .h6-form,
+    label {
+        justify-content: center;
+        text-align: center;
+    }
+
+    #boton-recargar {
+        display: none;
+    }
+    .select2-container {
+    z-index: 9999;
+}
+.header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Permite que se acomode en móvil */
+}
+
+/* Contenedor botones */
+.header-right {
+    display: flex;
+    gap: 10px;
+}
+
+/* Modo móvil */
+@media (max-width: 768px) {
+
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-right {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .header-right button {
+        width: 100%;
+    }
+}
+.fab-destino {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+
+    display: flex;
+    flex-direction: column; /* 👈 clave */
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.fab-destino:hover {
+    transform: scale(1.08);
+}
+
+.fab-img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+}
+
+.fab-text {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #333;
+}
+
+</style>
+<div class="content-body">
+    <div class="container-fluid">
+        <div class="row" style="padding-right: 0 !important;">
+            <div class="col-sm-12 col-xl-12 col-xxl-12" style="padding-right: 0 !important;">
+                <div class="card">
+
+                    <div class="card-header border-0 header-flex">
+
+                        <div class="header-left">
+                            <h4 class="card-title mb-0">
+                                <a href="{% url 'aplicacion:Menu_Presentacion' %}#Proceso">
+                                    <i class="bi bi-arrow-left-circle text-black fs-28"></i>
+                                </a>
+                                <b>SERVIDOS:</b> - ASIGNAR PEDIDO A TOLVA
+                            </h4>
+                        </div>
+                        <button type="button"
+                                class="fab-destino"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal1">
+                                
+                            <img src="{% static 'images/catalogos/tolva.png' %}"  
+                                alt="Destino" 
+                                class="fab-img">
+
+                            <span class="fab-text">DESTINO</span>
+                        </button>
+                        <div class="header-right">
+                            <button type="button" class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                BUSCAR PEDIDO
+                            </button>
+
+                            <button id="boton-guardar" class="btn btn-success">
+                                <i class="fas fa-arrow-alt-circle-right"></i>
+                                Enviar a {{FiltradoTolva.Alias}}
+                            </button>
+                        </div>
+
+                    </div>
+                    <div class="card-body tab-content p-0">
+
+                        <div class="card-tabs my-5 mt-sm-0 px-5 mx-3">
+                            <ul class="nav nav-tabs w-100 d-flex justify-content-between">
+                                <li class="nav-item">
+                                    <a href="{% url 'proceso:T_Solicitud_Servidos' %}" class="nav-link">Corrales
+                                        pendientes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active">Cargar en tolva</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'proceso:T_Servidos' %}" class="nav-link">Captura manual</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{% url 'proceso:T_Corrales_Servidos' %}" class="nav-link">Corrales
+                                        servidos</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane active show fade" id="monthly" role="tabpanel">
+
+
+                            <hr>
+                            <!-- Button trigger modal -->
+
+                            <!-- Modal -->
+                           
+                            {% if FiltradoTolva.ID != 1 %}
+                            <div class="row centrar">
+                                <div style="width: 33%;">
+                                    <h6 class="h6-form">Cantidad en {{FiltradoTolva.Alias}}</h6>
+                                    <h6 class="h6-form">{{ TTolva1.0.cantidad }} {{Filtradounidad.Abreviacion}}</h6>
+                                </div>
+                                <div style="width: 33%;">
+                                    <h6 class="h6-form">Cantidad seleccionada</h6>
+                                    <h6 class="h6-form"><span id="suma">0</span> {{Filtradounidad.Abreviacion}}
+                                    </h6>
+                                </div>
+                                <div style="width: 33%;">
+                                    <h6 class="h6-form">Cantidad total</h6>
+                                    <h6 class="h6-form"><span id="sumaSelect">0</span>
+                                        {{Filtradounidad.Abreviacion}} de
+                                        {{FiltradoTolva.Capacidad}} {{Filtradounidad.Abreviacion}}</h6>
+                                </div>
+                            </div>
+                            <!-- <hr> -->
+                            <hr>
+                            <form id="miFormulario" action="{% url 'proceso:A_Servidos_Tolva' %}" method="POST"
+                                autocomplete="off">
+                                {% csrf_token %}
+                                <div class="table-responsive">
+                                    <table class="table table-responsive-md card-table transactions-table" id="miTabla">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    <div class="row">
+                                                        <div class="col-3" style="margin-top:  23px;" >
+                                                            <input id="boton-deshabilitar" class="form-check inline-block" type="checkbox" value=""  checked>
+                                                            <input id="boton-recargar" class="form-check inline-block" type="checkbox" value=""  >
+                                                        </div>
+                                                       <div class="col-8  text-center" style="margin-top:  35px;">
+                                                            <h6>SELECCIONADO</h6>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    FOLIO
+                                                </th>
+
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CORRAL
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CANT. SOL.
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    CANT. SER.
+                                                </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive">
+                                                    FECHA PETICION
+                                                </th>
+
+                                                <!-- {% if perms.Aplicacion.change_tblservido or perms.Aplicacion.delete_tblservido %}
+                                                    <th class="text-black fs-16 font-w600 th-responsive">
+                                                        ACCIÓN
+                                                    </th>
+                                                    {% endif %} -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for Dato in FiltroServidos %}
+                                            <tr>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        <input type="checkbox" class="checkbox"
+                                                            value="{{ Dato.CantidadSolicitada }}"
+                                                            name="seleccionado_{{ Dato.ID }}"
+                                                            style="border: 1px black solid; font-size: 20px;">
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.Folio}}
+                                                    </span>
+                                                </td>
+
+
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.IDCorral_id__Descripcion}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.CantidadSolicitada}} {{Dato.Abreviacion}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.CantidadServida}} {{Dato.Abreviacion}}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="fs-16 text-black font-w400">
+                                                        {{Dato.Fecha}}
+                                                    </span>
+                                                    <input type="hidden" value="{{FiltradoTolva.ID }}" name="tolva">
+                                                    <input type="hidden" value="{{FiltradoTolva.Alias }}"
+                                                        name="NombreTolva">
+                                                    <input type="hidden" value="{{Dato.ID}}" name="id">
+                                                    <input type="hidden" value="{{Dato.IDProducto_id}}"
+                                                        name="idproducto">
+                                                </td>
+
+
+                                                <!-- <td>
+
+                                                    <a style="display: inline-block;" href="Editar/{{Dato.ID}}"
+                                                        role="button">
+                                                        <button class="edit-button">
+                                                            <svg class="edit-svgIcon" viewBox="0 0 512 512">
+                                                                <path
+                                                                    d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                    </a>                                                    
+
+                                                </td>                                                 -->
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
+                            {% else %}
+                            <div class="row centrar">
+                                <h6 class="h6-form">
+                                    <i class="fa fa-ban"></i> <i class="fa fa-close"></i>
+                                    No has seleccionado una tolva para cargar el producto
+                                    <i class="fa fa-close"></i> <i class="fa fa-ban"></i>
+                                </h6>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card m-4 p-5">
+                    <form id="pedido" action="{% url 'proceso:FT_Consolidacion' %}" method="POST">{% csrf_token %}
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
+                                <h6 class="h6-form">Seleccione el producto</h6>
+                                <select name="producto" class="select2 form-control" required>
+                                    <option value="{{FiltradoProducto.ID}}">
+                                        -------{{FiltradoProducto.Descripcion}}-------
+                                    </option>
+                                    {% for consolidacion in TConsolidacion %}
+                                    <option value="{{ consolidacion.IDProducto }}">
+                                        {{ consolidacion.Producto }} - - - Cantidad pendiente:
+                                        {{ consolidacion.cantidad }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
+                                <h6 class="h6-form">Seleccione tolva disponible</h6>
+                                <select name="tolva" class="select2 form-control" required>
+                                    {% if FiltradoTolva.IDProducto_id == FiltradoProducto.ID or FiltradoTolva.IDProducto_id == 1%}
+                                    <option value="{{FiltradoTolva.ID}}">
+                                        -------{{FiltradoTolva.Alias}}-------
+                                    </option>
+                                    {% else %}
+                                    <option value="1">La Tolva no se encuentra disponible</option>
+                                    {% endif %}
+                                    {% for tolva in STolva %}
+                                    {% if tolva.IDProducto_id == FiltradoProducto.ID or tolva.IDProducto_id == 1 %}
+                                    <option value="{{ tolva.ID }}">
+                                        {{ tolva.Alias }}
+                                    </option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2">
+                                
+                                
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 mb-3">
+                            </div>
+                        </div>
+                    </form>
+                
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">xCERRAR</button>
+                <button id="boton-buscar" class="btn btn-success"><i class="bi bi-search mr-5"></i> BUSCAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+        
+            <div class="tab-pane active show fade" id="monthly" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-responsive-md card-table transactions-table" id="miTabla">
+                        <thead>
+                            <tr>
+                                <th class="text-black fs-16 font-w600 th-responsive">
+                                    DESCRIPCIÓN
+                                </th>
+                                <th class="text-black fs-16 font-w600 th-responsive">
+                                    PRODUCTO
+                                </th>
+                                <th class="text-black fs-16 font-w600 th-responsive">
+                                    ESTATUS
+                                </th>
+                                <th class="text-black fs-16 font-w600 th-responsive">
+                                    ACCIONES
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for Dato in TTolva %}
+                            <tr>
+                                <td>
+                                    <span class="fs-16 text-black font-w400">
+                                        {{Dato.Alias}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fs-16 text-black font-w400">
+                                        {{Dato.IDProducto_id__Descripcion}}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fs-16 text-black font-w400">
+                                        {{Dato.IDEstatus_id__Descripcion}}
+                                    </span>
+                                </td>
+                                {% if Dato.IDProducto_id != 1 %}
+                                <td>
+
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-2 col-lg-2">
+                                            <form action="{% url 'descargas:PDF_Tolva' %}" method="POST">{% csrf_token %}
+                                                <input type="hidden" value="{{Dato.ID}}" name="tolva">
+                                                <button class="Btn" type="submit">
+                                                    <svg class="svgIcon" viewBox="0 0 384 512" height="1em">
+                                                        <path
+                                                            d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <div class="col-sm-12 col-md-10 col-lg-10">
+                                            <div class="accordion">
+                                                <div class="accordion-item">
+                                                    <input type="checkbox" id="{{Dato.ID}}"
+                                                        class="accordion-checkbox">
+                                                    <label for="{{Dato.ID}}" class="accordion-title">MOSTRAR
+                                                        PEDIDO</label>
+                                                    <div class="accordion-content ">
+                                                        <table
+                                                            class="table-responsive-md card-table transactions-table"
+                                                            id="miTabla">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th
+                                                                        class="text-black fs-16 font-w600 th-responsive">
+                                                                        {% if Dato.IDEstatus_id == 4 %}
+                                                                        CORRAL
+                                                                        {% else %}
+                                                                        MATERIA PRIMA
+                                                                        {% endif %}
+                                                                    </th>
+                                                                    <th
+                                                                        class="text-black fs-16 font-w600 th-responsive">
+                                                                        CANTIDAD
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% if Dato.IDEstatus_id == 4 %}
+                                                                {% for Servido in TServido %}
+                                                                {% if Servido.IDTolva_id == Dato.ID %}
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="fs-16 text-black font-w400">
+                                                                            {{ Servido.IDCorral_id__Descripcion }}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="fs-16 text-black font-w400">
+                                                                            {{ Servido.CantidadSolicitada }}
+                                                                            {% if Servido.IDProducto_id == 14 %}
+                                                                            Paca
+                                                                            {% else %}
+                                                                            Kg
+                                                                            {% endif %}
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                                {% else %}
+                                                                {% for Formulado in TFormulado %}
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="fs-16 text-black font-w400">
+                                                                            {{ Formulado.IDMateriaPrima__Descripcion }}
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>
+                                                                        <span class="fs-16 text-black font-w400">
+                                                                            {{ Formulado.CantidadSolicitada }}                                                                              
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>                                                                    
+                                                                {% endfor %}
+                                                                {% endif %}         
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="col-12 my-2">
+                                                            {% if Dato.IDEstatus_id == 4 %}
+                                                            <form action="{% url 'proceso:A_Pedido_Tolva' %}"
+                                                                method="POST"
+                                                                style="display: flex; flex-direction: row; justify-content: center; gap: 5px;">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{Dato.ID}}" name="id">
+                                                                <div class="col-6">
+                                                                    <button type="submit" name="cargamento-tolva"
+                                                                        value="Cancelado"
+                                                                        class="btn btn-danger btn-sm">CANCELAR
+                                                                        PEDIDO</button>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <button type="submit" name="cargamento-tolva"
+                                                                        value="Terminado"
+                                                                        style="background-color: rgb(19, 93, 163); border: 0;"
+                                                                        class="btn btn-danger btn-sm">TERMINAR
+                                                                        PEDIDO</button>
+                                                                </div>
+                                                            </form>
+                                                            {% else %}
+                                                            <form action="{% url 'proceso:A_Pedido_Formulado' %}"
+                                                                method="POST"
+                                                                style="display: flex; flex-direction: row; justify-content: center; gap: 5px;">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" value="{{Dato.ID}}" name="id">
+                                                                <div class="col-6">
+                                                                    <button type="submit" name="cargamento-tolva"
+                                                                        value="Cancelado"
+                                                                        class="btn btn-danger btn-sm">CANCELAR
+                                                                        PEDIDO</button>
+                                                                </div>
+                                                                <div class="col-6">
+                                                                    <button type="submit" name="cargamento-tolva"
+                                                                        value="Terminado"
+                                                                        style="background-color: rgb(19, 93, 163); border: 0;"
+                                                                        class="btn btn-danger btn-sm">TERMINAR
+                                                                        PEDIDO</button>
+                                                                </div>
+                                                            </form>                                                                
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                {% else %}
+                                <td>No se encontraron servidos para {{Tolva.Alias}}</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">xCERRAR</button>
+            <button id="boton-buscar" class="btn btn-success"><i class="bi bi-search mr-5"></i> BUSCAR</button>
+        </div>
+    </div>
+</div>
+
+                            
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtén todos los checkboxes con la clase "checkbox"
+        var checkboxes = document.querySelectorAll(".checkbox");
+        var suma = 0;
+        var capacidad = parseFloat("{{ FiltradoTolva.Capacidad }}");
+        // var capacidad = parseFloat(15000);
+        var sumaTotal = parseFloat("{{ TTolva1.0.cantidad }}"); // Inicializa la suma con TTolva1.0.cantidad
+        var sumaSelect = document.getElementById("sumaSelect"); // Obtén el elemento donde mostrarás la suma seleccionada
+        var sumaElement = document.getElementById("suma"); // Obtén el elemento donde mostrarás la suma total
+        var autocompletar = true; // Variable para habilitar o deshabilitar la función de autocompletar
+
+        // Función para validar y seleccionar checkboxes
+        function validarYSeleccionar() {
+            suma = parseFloat("{{ TTolva1.0.cantidad }}"); // Reinicializa la suma
+            checkboxes.forEach(function (cb) {
+                var valor = parseFloat(cb.value);
+
+                // Verifica si el checkbox está dentro del rango
+                if ((autocompletar || cb.checked) && valor + suma <= capacidad) {
+                    cb.checked = true; // Marca el checkbox automáticamente si corresponde
+                    suma += valor; // Actualiza la suma
+                } else {
+                    cb.checked = false; // Desmarca el checkbox si no corresponde
+                }
+            });
+
+            // Actualiza el contenido del elemento "suma"
+            sumaSelect.textContent = suma; // Muestra la suma seleccionada
+            sumaElement.textContent = suma - sumaTotal; // Muestra la suma total
+        }
+
+        // Llama a la función para validar y seleccionar al cargar la página
+        validarYSeleccionar();
+
+
+        // Agrega un evento "change" a cada checkbox para volver a validar al cambiar
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                var valor = parseFloat(checkbox.value);
+
+                // Si se desmarca un checkbox, resta su valor de la suma
+                if (!checkbox.checked) {
+                    suma -= valor;
+                }
+
+                // Vuelve a validar y seleccionar
+                validarYSeleccionar();
+            });
+        });
+
+        // Agrega un botón para deshabilitar la función de autocompletar
+
+        var botonDeshabilitar = document.getElementById("boton-deshabilitar");
+        var botonRecargar = document.getElementById("boton-recargar");
+
+        botonDeshabilitar.addEventListener("click", function () {
+            botonDeshabilitar.style.display = "none"; // Oculta el botón "Deshabilitar"
+            botonRecargar.style.display = "block"; // Muestra el botón "Habilitar sugerencia"
+            autocompletar = false; // Deshabilita la función de autocompletar
+            // Deshabilita los checkboxes que superan el límite
+            checkboxes.forEach(function (cb) {
+                var valor = parseFloat(cb.value);
+                if (checkbox.checked) {
+                    if (valor + suma > capacidad) {
+                        cb.disabled = false;
+                    } else {
+                        cb.disabled = true;
+                    }
+                }
+            });
+        });
+        botonRecargar.addEventListener("click", function () {
+            botonRecargar.style.display = "none"; // Oculta el botón "Habilitar sugerencia"
+            botonDeshabilitar.style.display = "block"; //
+            location.reload(); // Recarga la página al hacer clic en el botón "Recargar"
+        });
+    });
+    $(document).ready(function () {
+        $("#producto").change(function () {
+            var selectedOption = $(this).val();
+            if (selectedOption) {
+                // Obtiene la URL actual
+                var currentUrl = window.location.pathname;
+
+                // Reemplaza el último segmento (ID) con el nuevo valor
+                var newUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1) + selectedOption;
+
+                // Redirige a la nueva URL
+                window.location.href = newUrl;
+            }
+        });
+    });
+    document.getElementById("boton-guardar").addEventListener("click", function () {
+        // Captura el clic en el botón fuera del formulario
+        document.getElementById("miFormulario").submit(); // Envía el formulario manualmente
+    });
+    document.getElementById("boton-buscar").addEventListener("click", function () {
+        // Captura el clic en el botón fuera del formulario
+        document.getElementById("pedido").submit(); // Envía el formulario manualmente
+    });
+</script>
+{% endblock %}
