@@ -5,6 +5,7 @@ from django.db.models import Sum
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from datetime import datetime, date
+from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GUARDAR FORMULARIO CATALOGOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # -------------------------------------------------------OPERADORES--------------------------------------------------------
@@ -112,6 +113,7 @@ def guardarProductos(request):
 
 # -------------------------------------------------MOVIMIENTOS DE ANIMALES-------------------------------------------------
 def guardarRecetas(request):
+    ServiciosWeb = servicioActivo() 
     clave = request.POST['clave']
     clave_int = int(clave)
     formatoClave = 'F-{:06d}'.format(clave_int)
@@ -159,7 +161,7 @@ def guardarRecetas(request):
         if 'salir' in request.POST:
             return redirect('catalogo:T_Producto')
         elif 'agregar' in request.POST:
-            return render(request, "Producto/agregar.html", {'formatoClave':formatoClave, 'total':total,
+            return render(request, "Producto/agregar.html", {'formatoClave':formatoClave, 'total':total,'ServiciosWeb':ServiciosWeb,
             'Recetas':Recetas,'AgRecetas': AgRecetas,'FiltradoEstatus':FiltradoEstatus, 'FiltradoUnidad':FiltradoUnidad,
             'FMateriaPrima':FMateriaPrima })
     else:
