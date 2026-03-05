@@ -335,10 +335,19 @@
                             <div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 mb-3">
                                 <h6 class="h6-form">Seleccione tolva disponible</h6>
                                 <select name="tolva" class="select2 form-control" required>
+                                    {% if FiltradoTolva.IDProducto_id == FiltradoProducto.ID or FiltradoTolva.IDProducto_id == 1%}
+                                    <option value="{{FiltradoTolva.ID}}">
+                                        -------{{FiltradoTolva.Alias}}-------
+                                    </option>
+                                    {% else %}
+                                    <option value="1">La Tolva no se encuentra disponible</option>
+                                    {% endif %}
                                     {% for tolva in STolva %}
+                                    {% if tolva.IDProducto_id == FiltradoProducto.ID or tolva.IDProducto_id == 1 %}
                                     <option value="{{ tolva.ID }}">
                                         {{ tolva.Alias }}
                                     </option>
+                                    {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>
@@ -380,9 +389,9 @@
                                 <th class="text-black fs-16 font-w600 th-responsive">
                                     PRODUCTO
                                 </th>
-                                <!-- <th class="text-black fs-16 font-w600 th-responsive">
+                                <th class="text-black fs-16 font-w600 th-responsive">
                                     ESTATUS
-                                </th> -->
+                                </th>
                                 <th class="text-black fs-16 font-w600 th-responsive">
                                     ACCIONES
                                 </th>
@@ -401,11 +410,11 @@
                                         {{Dato.IDProducto_id__Descripcion}}
                                     </span>
                                 </td>
-                                <!-- <td>
+                                <td>
                                     <span class="fs-16 text-black font-w400">
                                         {{Dato.IDEstatus_id__Descripcion}}
                                     </span>
-                                </td> -->
+                                </td>
                                 {% if Dato.IDProducto_id != 1 %}
                                 <td>
 
