@@ -1,6 +1,7 @@
 from django.urls import path
+
 from . import views
-from Proceso.consultarProcesos import actualizar, agregar, editar, mostrar, formulario, dispositivos, excel
+from Proceso.consultarProcesos import actualizar, agregar, editar, mostrar, formulario, dispositivos
 
 
 urlpatterns = [
@@ -10,7 +11,6 @@ urlpatterns = [
     # DATOS DEL AREA DE SERVIDOS
     path('Solicitud_Servidos/', mostrar.TablaSolicitudServido, name='T_Solicitud_Servidos'),
     path('Corrales_Servidos/', mostrar.TablaServidoCorral, name='T_Corrales_Servidos'),
-    path('exportar-servido-corral/', excel.ExportarServidoCorralExcel, name='exportar_servido_corral'),
     path('Consolidacion_Servido/', mostrar.TablaConsolidacionServido, name='T_Consolidacion'),
     path('Consolidacion_Servido/Filtro/Tolva/<str:ID>/<int:Estatus>/<int:Producto>/', mostrar.TablaTolvaServido),
     path('Consolidacion_Servido_Filtro/', mostrar.TablaFiltroServido, name='FT_Consolidacion'),

@@ -9,7 +9,7 @@ class tblConfiguracion(models.Model):
     FechaDescarga = models.DateTimeField(null=True)
     FechaActualizacion = models.DateTimeField(max_length=150, null=True)
     FolioSalMaquila = models.CharField(max_length=10, null=True)
-    
+    FolioRepServMov = models.CharField(max_length=10, null=True)
     
         
 # -------------------------------------------------------SUBTABLAS-------------------------------------------------------

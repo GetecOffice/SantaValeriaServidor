@@ -118,7 +118,7 @@ def actualizarCorral(request):
     id = request.POST['id']
     clave = request.POST['clave']
     corral_v = request.POST['corral'].upper().strip()
-    capacidad_v = request.POST['capacidad']
+    capacidad_v = 0
     estatus_v = request.POST['estatus']
     fecha_v = request.POST['fecha']
     

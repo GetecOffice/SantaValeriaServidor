@@ -2809,9 +2809,9 @@ textarea.form-control {
   border-radius: 0.25em;
 }
 
-.form-check-input[type="radio"] {
+/* .form-check-input[type="radio"] {
   border-radius: 50%;
-}
+} */
 
 .form-check-input:active {
   filter: brightness(90%);

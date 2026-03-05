@@ -23,5 +23,6 @@ urlpatterns = [
     path('Catalogo/', include(('Catalogo.urls', 'Catalogo'), namespace='catalogo')),
     path('Descargas/', include(('Descargas.urls', 'Descargas'), namespace='descargas')),
     path('Proceso/', include(('Proceso.urls', 'Proceso'), namespace='proceso')),
+    path('Proceso/', include(('Reporte.urls', 'Reporte'), namespace='reporte')),
     path('Subtabla/', include(('Subtabla.urls', 'Subtabla'), namespace='subtabla')),
 ]

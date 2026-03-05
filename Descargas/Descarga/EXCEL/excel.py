@@ -1,24 +1,28 @@
 from django.http import HttpResponse
 from openpyxl import Workbook
-from django.db.models import Q
+from django.db import connection
 from django.utils.timezone import localtime
-from Aplicacion.models import tblRepartidor
+
 
 def ExportarServidoCorralExcel(request):
 
-    TServidos = tblRepartidor.objects.filter(
-        Q(IDEstatus_id=10) | Q(IDEstatus_id=11)
-    ).values(
-        'ID',
-        'Folio',
-        'IDCorral_id__Descripcion',
-        'IDProducto_id__Descripcion',
-        'IDEstatus_id__Descripcion',
-        'CantidadSolicitada',
-        'CantidadServida',
-        'Fecha',
-        'FechaServida'
-    )
+    fechainicio = request.POST.get('fecha1')
+    fechafinal = request.POST.get('fecha2')
+
+    consulta_sql = """
+        SELECT  r.ID, r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
+        r.CantidadSolicitada, r.CantidadServida, r.Fecha, r.FechaServida
+        FROM Aplicacion_tblrepartidor r
+        LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
+        LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
+        LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
+        WHERE r.IDEstatus_id IN (10,11)
+        AND DATE(r.FechaServida) BETWEEN %s AND %s
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(consulta_sql, [fechainicio, fechafinal])
+        TServidos = cursor.fetchall()
 
     wb = Workbook()
     ws = wb.active
@@ -29,7 +33,6 @@ def ExportarServidoCorralExcel(request):
         "Folio",
         "Corral",
         "Producto",
-        "Estatus",
         "Cantidad Solicitada",
         "Cantidad Servida",
         "Fecha",
@@ -38,47 +41,37 @@ def ExportarServidoCorralExcel(request):
 
     ws.append(headers)
 
-    # 🔹 Agregar datos
     for row in TServidos:
 
-        fecha = row['Fecha']
-        fecha_servida = row['FechaServida']
-
-        if fecha:
-            fecha = localtime(fecha).replace(tzinfo=None)
-
-        if fecha_servida:
-            fecha_servida = localtime(fecha_servida).replace(tzinfo=None)
+        fecha = row[6]
+        fecha_servida = row[7]
 
         ws.append([
-            row['ID'],
-            row['Folio'],
-            row['IDCorral_id__Descripcion'],
-            row['IDProducto_id__Descripcion'],
-            row['IDEstatus_id__Descripcion'],
-            row['CantidadSolicitada'],
-            row['CantidadServida'],
+            row[0],
+            row[1],
+            row[2],
+            row[3],
+            row[4],
+            row[5],
             fecha,
             fecha_servida,
         ])
 
-    # 🔹 Aplicar formato de fecha (DESPUÉS de insertar datos)
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
+        row[6].number_format = 'DD/MM/YYYY HH:MM'
         row[7].number_format = 'DD/MM/YYYY HH:MM'
-        row[8].number_format = 'DD/MM/YYYY HH:MM'
 
-    # 🔹 Ajustar ancho automático
     for column in ws.columns:
         max_length = 0
         column_letter = column[0].column_letter
-        
+
         for cell in column:
             try:
                 if cell.value:
                     max_length = max(max_length, len(str(cell.value)))
             except:
                 pass
-        
+
         ws.column_dimensions[column_letter].width = max_length + 2
 
     response = HttpResponse(

@@ -24,15 +24,17 @@ def TablaSolicitudServido(request):
 
 def TablaServidoCorral(request):
     ServiciosWeb = servicioActivo() 
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     TServidos = tblRepartidor.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
     'CantidadSolicitada', 'CantidadServida', 'Fecha', 'FechaServida'
     )
     
-    return render(request, 'ServidoListo/index.html',{'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
+    return render(request, 'ServidoListo/index.html',{'FechaDeHoy':FechaDeHoy, 'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
 
 def TablaFormuladoCorral(request):
     ServiciosWeb = servicioActivo() 
+    
     TFormulado = tblFormulado.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDMateriaPrima_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion', 'IDTolva_id__Alias',
     'CantidadSolicitada', 'CantidadServida', 'Fecha', 'FechaServida'

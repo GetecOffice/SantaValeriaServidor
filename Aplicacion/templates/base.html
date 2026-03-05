@@ -168,14 +168,14 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <div class="input-group search-area">
                                     <input type="text" class="form-control" placeholder="Search here...">
                                     <span class="input-group-text"><a href="javascript:void(0)"><i
                                                 class="flaticon-381-search-2"></i></a></span>
                                 </div>
                             </li>
-                            <li class="nav-item">
+                           <li class="nav-item">
                                 <div class="dropdown">
                                     <button class="btn btn-primary d-sm-inline-block d-none dropdown-toggle"
                                         type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
@@ -188,11 +188,10 @@
                                                 PDF</a></li>
                                     </ul>
                                 </div>
-                            </li>
-                            <li class="nav-item ocultar">
-                                <a href="javascript:void(0);" class="btn btn-primary d-sm-inline-block d-none" >Generate
-                                    Report<i class="las la-signal ms-3 scale5"></i></a>
-                            </li>
+                            </li> -->
+                            {% block generar %}
+                           
+                            {% endblock %}
                         </ul>
 
                     </div>
@@ -238,6 +237,12 @@
                             <span class="nav-text">PROCESOS</span>
                         </a>
                     </li>
+                    <li><a href="{% url 'aplicacion:Menu_Presentacion' %}#Reporte" class="ai-icon"
+                            aria-expanded="false">
+                            <i class="fa fa-file-alt"></i>
+                            <span class="nav-text">REPORTE</span>
+                        </a>
+                    </li>
                     <li><a href="{% url 'aplicacion:Menu_Presentacion' %}#Subtabla" class="ai-icon"
                             aria-expanded="false">
                             <i class="flaticon-381-networking"></i>
@@ -252,7 +257,7 @@
         <!--**********************************
             Sidebar end
         ***********************************-->
-        {% if ServiciosWeb.EstadoPago == False and ServiciosWeb.Notificacion == False %}
+        <!-- {% if ServiciosWeb.EstadoPago == False and ServiciosWeb.Notificacion == False %}
         <div class="toast alerta" role="alert" aria-live="assertive" aria-atomic="true"
             style="position: fixed; bottom: 5px; right: 5px; z-index: 9999; background-color: aliceblue;">
             <div class="toast-header">
@@ -284,7 +289,7 @@
             });
         </script>
         {% endif %}
-  
+   -->
         {% if ServiciosWeb.Servicio == True %}                 
         {% block body %}
 

@@ -38,32 +38,7 @@
                                                 class="form-control input" placeholder="Ingrese el nombre del corral"
                                                 required>
                                         </div>
-                                        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mb-3">
-                                            <h6 class="h6-form">CAPACIDAD *</h6>
-                                            <input type="number" name="capacidad" value="{{TECorrales.Capacidad}}"
-                                                class="form-control input"
-                                                placeholder="Ingrese la capacidad para los corrales" required>
-                                        </div>
                                         <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-3">
-                                            <h6 class="h6-form">FECHA *</h6>
-                                            <input class="form-control" type="datetime-local"
-                                                value="{{ fecha|date:'Y-m-d H:i' }}" name="fecha" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 mb-3">
-                                            <h6 class="h6-form">CLIENTE *</h6>
-                                            <select class="select2 form-control col-12" name="cliente" required>
-                                                <option value="{{FiltradoCliente.ID}}">
-                                                    --------{{FiltradoCliente.Nombre}}--------
-                                                </option>
-                                                {% for Cliente in FECliente %}
-                                                <option value="{{ Cliente.ID }}">{{ Cliente.Nombre }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 mb-3">
                                             <h6 class="h6-form">ESTATUS *</h6>
                                             <select class="select2 form-control col-12" name="estatus" required>
                                                 <option value="{{FiltradoEstatus.ID}}">
@@ -74,6 +49,32 @@
                                                 {% endfor %}
                                             </select>
                                         </div>
+                                       
+                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-3">
+                                            <h6 class="h6-form">FECHA *</h6>
+                                            <input class="form-control" type="datetime-local"
+                                                value="{{ fecha|date:'Y-m-d H:i' }}" name="fecha" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <!-- <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6 mb-3">
+                                            <h6 class="h6-form">CLIENTE *</h6>
+                                            <select class="select2 form-control col-12" name="cliente" required>
+                                                <option value="{{FiltradoCliente.ID}}">
+                                                    --------{{FiltradoCliente.Nombre}}--------
+                                                </option>
+                                                {% for Cliente in FECliente %}
+                                                <option value="{{ Cliente.ID }}">{{ Cliente.Nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div> -->
+                                         <!-- <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mb-3">
+                                            <h6 class="h6-form">CAPACIDAD *</h6>
+                                            <input type="number" name="capacidad" value="{{TECorrales.Capacidad}}"
+                                                class="form-control input"
+                                                placeholder="Ingrese la capacidad para los corrales" required>
+                                        </div> -->
                                     </div>
 
                                     <div class="form-group my-4">

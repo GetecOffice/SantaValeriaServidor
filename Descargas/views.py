@@ -321,53 +321,32 @@ def reporteMovimientoServidos(request):
     formatoClave = cargar_folio(valor)
     fecha_actual = datetime.today()
     formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
-    user = request.user
-    Cliente = request.POST['cliente']
-    Fecha = request.POST['fechaInicial']
-    Fecha2 = request.POST['fechaFinal']
+
+    Fecha = request.POST['fecha1']
+    Fecha2 = request.POST['fecha2']
     logo_url = request.build_absolute_uri(static('images/catalogos/valmo.png'))
-    
-    dataInput= request.POST.get('reporte-movimientos-servidos', '')
-    if dataInput is not None and dataInput != '':
-        if  Cliente == 'todos':
-            consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
-                Aplicacion_tblcorrales.Descripcion,  Aplicacion_tblproductos.Descripcion,
-                Aplicacion_tblservido.CantidadSolicitada, Aplicacion_tblservido.CantidadServida,
-                Aplicacion_tblservido.Fecha, Aplicacion_tblservido.FechaServida, Aplicacion_tblunidades.Abreviacion
-                FROM Aplicacion_tblservido
-                LEFT JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
-                LEFT JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID
-                LEFT JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
-                LEFT JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
-                WHERE Aplicacion_tblservido.Fecha BETWEEN  %s AND  %s and Aplicacion_tblservido.IDCliente_id != 1 and Aplicacion_tblservido.IDEstatus_id = 10 """
-            with connection.cursor() as cursor:
-                cursor.execute(consulta_sql, [Fecha, Fecha2])
-                reportes = cursor.fetchall()
-            Nombre = 'En general'
-            Cliente = 'todos'
-            correo = False
-        else:
-            consulta_sql = """SELECT DISTINCT Aplicacion_tblservido.ID, Aplicacion_tblclientes.Nombre, 
-                Aplicacion_tblcorrales.Descripcion,  Aplicacion_tblproductos.Descripcion,
-                Aplicacion_tblservido.CantidadSolicitada, Aplicacion_tblservido.CantidadServida,
-                Aplicacion_tblservido.Fecha, Aplicacion_tblservido.FechaServida, Aplicacion_tblunidades.Abreviacion
-                FROM Aplicacion_tblservido
-                LEFT JOIN Aplicacion_tblproductos ON Aplicacion_tblservido.IDProducto_id = Aplicacion_tblproductos.ID
-                LEFT JOIN Aplicacion_tblunidades ON Aplicacion_tblproductos.IDUnidadMedida_id = Aplicacion_tblunidades.ID
-                LEFT JOIN Aplicacion_tblclientes ON Aplicacion_tblservido.IDCliente_id = Aplicacion_tblclientes.ID
-                LEFT JOIN Aplicacion_tblcorrales ON Aplicacion_tblservido.IDCorral_id = Aplicacion_tblcorrales.ID
-                WHERE  Aplicacion_tblclientes.ID = %s AND  (Aplicacion_tblservido.Fecha BETWEEN  %s AND  %s) and Aplicacion_tblservido.IDCliente_id != 1 and Aplicacion_tblservido.IDEstatus_id = 10 
-                """
-            with connection.cursor() as cursor:
-                cursor.execute(consulta_sql, [Cliente, Fecha, Fecha2])
-                reportes = cursor.fetchall()
-            TECliente = tblClientes.objects.get(ID=Cliente)
-            Nombre = TECliente.Nombre
-            correo = TECliente.Email
+
+
+    consulta_sql = """
+        SELECT  r.ID, r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
+        r.CantidadSolicitada, r.CantidadServida, r.Fecha, r.FechaServida
+        FROM Aplicacion_tblrepartidor r
+        LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
+        LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
+        LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
+        WHERE r.IDEstatus_id IN (10,11)
+        AND DATE(r.FechaServida) BETWEEN %s AND %s
+    """
+
+    with connection.cursor() as cursor:
+        cursor.execute(consulta_sql, [Fecha, Fecha2])
+        reportes = cursor.fetchall()
+
+
 
     # Render the HTML template with the data
     html_string = render_to_string('Descargas/PDF/ReporteServidos/Movimientos.html', {'logo_url': logo_url, 'fecha_actual': fecha_actual,
-                                        'formatoClave':formatoClave, 'reportes': reportes, 'Nombre': Nombre, 'Cliente': Cliente, 'Fecha1': Fecha, 'Fecha2': Fecha2})
+                                        'formatoClave':formatoClave, 'reportes': reportes, 'Fecha1': Fecha, 'Fecha2': Fecha2})
     # Create a BytesIO buffer to receive the PDF
     pdf_buffer = BytesIO()
 
@@ -379,12 +358,7 @@ def reporteMovimientoServidos(request):
 
     # Close the buffer
     pdf_buffer.close()
-    
-    # if correo:
-    #     nombre_user = Nombre
-    #     nombre_Reporte = "REPORTE MOVIMIENTO DE SERVIDOS"
-    #     nombre_archivo = f"Servidos {formatted_fecha_actual}"
-    #     Enviar_PDF_email(nombre_user, correo, nombre_Reporte, nombre_archivo, pdf_file, formatted_fecha_actual)
+
 
     # Create an HTTP response with the attached PDF file
     response = HttpResponse(pdf_file, content_type='application/pdf')
