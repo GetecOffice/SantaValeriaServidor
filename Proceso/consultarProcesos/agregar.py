@@ -7,11 +7,13 @@ from Aplicacion.models import *
 from datetime import datetime, date
 from django.utils import timezone
 from django.db.models import Q
+from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GUARDAR FORMULARIO PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
 
 def guardarSolicitudServido(request):
+    ServiciosWeb = servicioActivo() 
     clave = request.POST['folio']
     corral = request.POST['corral']
     producto = request.POST['producto']
@@ -53,7 +55,7 @@ def guardarSolicitudServido(request):
                 print(cantidadSol)
 
                 return render(request, 'SolicitudServido/form.html',{
-                'ultimo_folio': ultimo_folio,'SelectCorral':SelectCorral, 'SelectProducto':SelectProducto,                                                                         
+                'ultimo_folio': ultimo_folio,'SelectCorral':SelectCorral, 'SelectProducto':SelectProducto, 'ServiciosWeb':ServiciosWeb,                                                                      
                 'cantidadSol':cantidadSol, 'FECorrales':FECorrales, 'FEProductos':FEProductos, 'FEstatus':FEstatus, 'FechaDeHoy':FechaDeHoy})
         elif peticion == '2' or peticion == 2:
             email = request.POST['email']            
@@ -64,6 +66,7 @@ def guardarSolicitudServido(request):
     
 # -------------------------------------------------SERVIDOS MANUALES-------------------------------------------------
 def guardarServidosManuales(request):
+    ServiciosWeb = servicioActivo() 
     clave = request.POST['folio']
     cliente = request.POST['cliente']
     corral = request.POST['corral']
