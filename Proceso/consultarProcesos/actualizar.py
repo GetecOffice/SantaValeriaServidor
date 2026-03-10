@@ -48,6 +48,37 @@ def actualizarServidosManual(request):
     else:
         return redirect('T-Servidos')
     
+def actualizarOrdenServidos(request):
+    if request.method == 'POST':
+        id_v = request.POST.getlist('id[]')
+        producto_v = request.POST.getlist('producto[]')
+        cantidadSer_v = request.POST.getlist('cantidadSer[]')
+        seSirve_v = request.POST.getlist('seSirve[]')
+        # FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+
+        producto_instancia = tblProductos.objects.get(ID = producto_v)
+        solicitudes = []
+        for i in range(len(cantidadSer_v)):
+            if cantidadSer_v[i] and float(cantidadSer_v[i]) != 0:
+                solicitud = {
+                    'id': id_v[i],
+                    'seSirve': seSirve_v[i],
+                    'producto': producto_v[i],
+                    'cantidadSer': float(cantidadSer_v[i])
+                }
+                solicitudes.append(solicitud)
+
+        for solicitud in solicitudes:
+            IDFilaTabla_v = solicitud['id']
+            servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
+            servidos_save.SeSirve = solicitud['seSirve']
+            servidos_save.CantidadServida = solicitud['cantidadSer']
+            servidos_save.IDProducto = solicitud['producto']
+            servidos_save.save()
+
+        messages.success(request, f'El Servido se ha actualizado exitosamente.')
+        return redirect('proceso:T_Servidos')
+        
 def actualizarCantidadServidosManual(request):
     if request.method == 'POST':
         id_v = request.POST.getlist('id[]')

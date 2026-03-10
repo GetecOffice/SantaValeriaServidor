@@ -10,9 +10,47 @@ from django.db.models import Q
 from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< GUARDAR FORMULARIO PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-
-
 def guardarSolicitudServido(request):
+    if request.method == 'POST':
+        # VARIABLES PARA CONFIGURACION
+        porcentaje_v = int(request.POST.get('porcentaje'))
+        # LLENAR LA TABLA DE TBLREPARTIDOR
+        id_v = request.POST.getlist('id[]')
+        folio_v = int(request.POST.get('folio'))
+        cantidadSol_v = request.POST.getlist('cantidadSol[]')
+        producto_v = request.POST.getlist('producto[]')
+        seSirve_v = request.POST.getlist('seSirve[]')
+
+        FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+        
+        solicitudes = []
+        for i in range(len(cantidadSol_v)):
+            if cantidadSol_v[i] :
+                solicitud = {
+                    'id': id_v[i],
+                    'producto': producto_v[i],
+                    'seSirve': seSirve_v[i],
+                    'cantidadSol': float(cantidadSol_v[i])
+                }
+                solicitudes.append(solicitud)
+
+        for solicitud in solicitudes:
+            folio_v += 1
+            clave_int = folio_v
+            formatoClave = 'S-{:06d}'.format(clave_int)         
+            tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
+            IDEstatus_id = 3, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0,  CantidadServida =0, 
+            Fecha = FechaDeHoy, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
+
+        porcentaje_save = tblConfiguracion.objects.get(ID=1)
+        porcentaje_save.Porcentaje = porcentaje_v
+        porcentaje_save.save()
+
+        messages.success(request, f'El Servido se ha actualizado exitosamente.')
+        print("Sevidopr")
+        return redirect('proceso:T_Solicitud_Servidos')
+
+def guardarSolicitudServido1(request):
     ServiciosWeb = servicioActivo() 
     clave = request.POST['folio']
     corral = request.POST['corral']

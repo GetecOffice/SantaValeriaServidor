@@ -24,22 +24,25 @@ urlpatterns = [
     path('Consolidacion_Formulado_Filtro/', mostrar.TablaFiltroFormulado, name='FT_FConsolidacion'),
     path('Formulado_Manuales/', mostrar.TablaFormuladoManual, name='T_FormuladoM'),
     path('Formulado_Servidos/', mostrar.TablaFormuladoCorral, name='T_Formulado_Servidos'),
-    
+        
     # DATOS DE LOS DATOS DE LA TOLVA
     path('Cargamento_Tolva/', mostrar.TablaCargamentoTolva, name='T_Cargamento_Tolva'),
     
 
     path('Formulario_Solicitud_Servido/',formulario.FormularioSolicitudServido, name='F_Solicitud_Servidos'),
     path('Formulario_Servidos_Manuales/',formulario.FormularioServidoAnimales, name='F_Servidos'),
+    path('Replicar_Servidos/', formulario.FormularioReplicarServido, name='R_Servidos'),
 
     path('Guardar_Solicitud_Servidos/', agregar.guardarSolicitudServido, name="G_Solicitud_Servidos"),
+    path('Guardar_Solicitud_Servidos/', agregar.guardarSolicitudServido, name="R_Solicitud_Servidos"),
     path('Guardar_Servidos_Manual/', agregar.guardarServidosManuales),
 
-    path('Solicitud_Servidos/Editar/<ID>', editar.editarSolicitudServidos),
+    path('Solicitud_Servidos/Editar/', editar.editarSolicitudServidos, name="E_Solicitud_Servidos"),
     path('Dato_Servidos_Manuales/Editar/<ID>', editar.editarServidosManuales),
 
     # ACTUALIZAR PROCESOS
     path('ActualizarServidorManual/', actualizar.actualizarServidosManual, name="A_Solicitud_Servidos"),
+    path('Actualizar_Orden_Servidos/', actualizar.actualizarOrdenServidos, name="A_Orden_Servidos"),
     path('ActualizarServidorManualCantidad/', actualizar.actualizarCantidadServidosManual, name="Cantidad_servidos_manuales"),
     path('ActualizarFormuladoManualCantidad/', actualizar.actualizarCantidadFormuladoManual, name="Cantidad_Formulado_manuales"),
     path('ActualizarServidosATolva/', actualizar.actualizarServidosATolva, name="A_Servidos_Tolva"),

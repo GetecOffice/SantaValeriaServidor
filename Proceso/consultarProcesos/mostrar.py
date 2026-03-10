@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from datetime import datetime, date
 from django.utils import timezone
 from django.db.models import Sum
 from django.db.models import Q
 # LLAMAR ARCHIVOS LOCALES
 from Aplicacion.forms import *
 from Aplicacion.models import *
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.db.models import Sum, Count, Q, Max
+from django.db.models.functions import TruncDate
 from django.db.models import F, FloatField, ExpressionWrapper, Value
 from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< TABLAS DE PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -16,18 +15,42 @@ from Aplicacion.views import servicioActivo
 # -------------------------------------------------SERVIDOS ANIMALES---------------------------------------------------
 def TablaSolicitudServido(request):
     ServiciosWeb = servicioActivo() 
-    TServidos = tblRepartidor.objects.filter(Q(IDEstatus_id =3) | Q(IDEstatus_id=9)).values('ID', 'Folio',
-        'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
-        'CantidadSolicitada', 'CantidadServida','Fecha', 'FechaServida'
+    TGServidos = (
+        tblRepartidor.objects
+        .filter(Q(IDEstatus_id=3) | Q(IDEstatus_id=9))
+        .annotate(fecha=TruncDate('Fecha'))
+        .values('Fecha')
+        .annotate(
+            total_cantidad=Sum('CantidadSolicitada'),
+            total_registros=Count('ID'),
+            total_estatus3=Count('ID', filter=Q(IDEstatus_id=3)),
+            productos_distintos=Count('IDProducto_id', distinct=True),
+            porcentaje=Max('Porcentaje')
+        )
+        .order_by('-Fecha')
     )
-    return render(request, 'SolicitudServido/index.html',{'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
+    THServidos = (
+        tblRepartidor.objects
+        .filter( Q(IDEstatus_id=10))
+        .annotate(fecha=TruncDate('Fecha'))
+        .values('Fecha')
+        .annotate(
+            total_cantidad=Sum('CantidadSolicitada'),
+            total_registros=Count('ID'),
+            total_estatus3=Count('ID', filter=Q(IDEstatus_id=10)),
+            productos_distintos=Count('IDProducto_id', distinct=True),
+            porcentaje=Max('Porcentaje')
+        )
+        .order_by('-Fecha')
+    )
+    return render(request, 'SolicitudServido/index.html',{'THServidos': THServidos, 'TGServidos':TGServidos, 'ServiciosWeb':ServiciosWeb })
 
 def TablaServidoCorral(request):
     ServiciosWeb = servicioActivo() 
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')
     TServidos = tblRepartidor.objects.filter(Q(IDEstatus_id = 10) | Q(IDEstatus_id = 11)).values('ID', 'Folio',
     'IDCorral_id__Descripcion','IDProducto_id__Descripcion','IDEstatus_id__Descripcion',
-    'CantidadSolicitada', 'CantidadServida', 'Fecha', 'FechaServida'
+    'CantidadSolicitada', 'CantidadServida', 'Fecha', 'FechaServida1'
     )
     
     return render(request, 'ServidoListo/index.html',{'FechaDeHoy':FechaDeHoy, 'TServidos': TServidos, 'ServiciosWeb':ServiciosWeb })
@@ -72,7 +95,7 @@ def TablaTolvaServidoCorral(request):
         TServidos = tblRepartidor.objects.filter(IDEstatus_id = tolva).values('ID', 
         'Folio','IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 
         'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida', 'Fecha',
-        'FechaServida', 'IDProducto_id', 'IDEstatus_id')
+        'FechaServida1', 'IDProducto_id', 'IDEstatus_id')
         if tolva == '4':
             tolvas = 'EN TOLVA 1'
         elif tolva == '5':
@@ -123,7 +146,7 @@ def TablaFiltroServido(request):
         FiltroServidos = tblRepartidor.objects.filter(Q(IDProducto_id= producto) & (Q(IDEstatus_id =3) | Q(IDEstatus_id=9))).values('ID', 'Folio',
             'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion',
             'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida',
-            'Fecha', 'FechaServida','IDProducto_id'
+            'Fecha', 'FechaServida1','IDProducto_id'
         )
         FiltradoProducto= tblProductos.objects.get(ID=producto)
         unidad_id = FiltradoProducto.IDUnidadMedida.ID
@@ -173,7 +196,7 @@ def TablaFiltroServido(request):
         FiltroServidos = tblRepartidor.objects.filter(IDProducto_id= 1, IDEstatus_id =3).values('ID', 'Folio',
             'IDCorral_id__Descripcion', 'IDProducto_id__Descripcion', 
             'IDEstatus_id__Descripcion', 'CantidadSolicitada', 'CantidadServida', 
-            'Fecha', 'FechaServida','IDProducto_id' )
+            'Fecha', 'FechaServida1','IDProducto_id' )
     resultados = tblRepartidor.objects.filter(Q(IDEstatus_id =3) | Q(IDEstatus_id=9)).values('IDProducto_id__Descripcion','IDProducto_id').annotate(total_cantidad=Sum('CantidadSolicitada')).order_by('IDProducto_id__Descripcion')
 
     TConsolidacion = []  # Crear una lista vacía para almacenar los resultados

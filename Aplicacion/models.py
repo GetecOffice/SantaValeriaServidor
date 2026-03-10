@@ -4,10 +4,10 @@ from django.contrib.auth.models import Permission, AbstractBaseUser, BaseUserMan
     
 class tblConfiguracion(models.Model):
     ID = models.AutoField(primary_key=True)
-    Usuario = models.CharField(max_length=150, null=True)
-    BaseDeDatos = models.CharField(max_length=150,null=True)
+    Usuario = models.CharField(max_length=50, null=True)
+    BaseDeDatos = models.CharField(max_length=50,null=True)
     FechaDescarga = models.DateTimeField(null=True)
-    FechaActualizacion = models.DateTimeField(max_length=150, null=True)
+    FechaActualizacion = models.DateTimeField(null=True)
     FolioSalMaquila = models.CharField(max_length=10, null=True)
     FolioRepServMov = models.CharField(max_length=10, null=True)
     
@@ -16,26 +16,26 @@ class tblConfiguracion(models.Model):
 class tblEstatus(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
-    Descripcion = models.CharField(max_length=150,null=True)
+    Descripcion = models.CharField(max_length=30,null=True)
     
 class tblUnidades(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
-    Descripcion = models.CharField(max_length=150,null=True)
-    Abreviacion = models.CharField(max_length=150,null=True)
+    Descripcion = models.CharField(max_length=30,null=True)
+    Abreviacion = models.CharField(max_length=10,null=True)
     
     
 # -------------------------------------------------------CATALOGOS-------------------------------------------------------
 class tblOperadores(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
-    Descripcion = models.CharField(max_length=150, null=True)
+    Descripcion = models.CharField(max_length=50, null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
 
 class tblMateriaPrima(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
-    Descripcion = models.CharField(max_length=150,null=True)
+    Descripcion = models.CharField(max_length=50,null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     IDUnidadMedida = models.ForeignKey(tblUnidades, on_delete=models.DO_NOTHING, null=True)
     PrecioUnitario = models.FloatField(null=True)
@@ -44,7 +44,7 @@ class tblMateriaPrima(models.Model):
 class tblProductos(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
-    Descripcion = models.CharField(max_length=150,null=True)
+    Descripcion = models.CharField(max_length=50,null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     IDUnidadMedida = models.ForeignKey(tblUnidades, on_delete=models.DO_NOTHING, null=True)
     PrecioUnitario = models.FloatField(null=True)
@@ -52,21 +52,21 @@ class tblProductos(models.Model):
     
 class tblCorrales(models.Model):
     ID = models.AutoField(primary_key=True)
-    Clave = models.CharField(max_length=150, null=True)
-    Descripcion = models.CharField(max_length=150,null=True)
+    Clave = models.CharField(max_length=15, null=True)
+    Descripcion = models.CharField(max_length=50,null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
-    Fecha = models.DateTimeField(max_length=150, null=True)     
+    Fecha = models.DateTimeField(null=True)     
    
 class tblTolva(models.Model):
     ID = models.AutoField(primary_key=True)
     Clave = models.CharField(max_length=15, null=True)
     Marca = models.CharField(max_length=15, null=True)
-    Modelo = models.CharField(max_length=150, null=True)
+    Modelo = models.CharField(max_length=50, null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     IDProducto = models.ForeignKey(tblProductos, on_delete=models.DO_NOTHING, null=True)
     Capacidad = models.IntegerField(null=True)
     UdeM = models.ForeignKey(tblUnidades, on_delete=models.DO_NOTHING, null=True)
-    Alias = models.CharField(max_length=100, null=True)
+    Alias = models.CharField(max_length=50, null=True)
     
 class tblRepartidor(models.Model):
     ID = models.AutoField(primary_key=True)
@@ -75,10 +75,15 @@ class tblRepartidor(models.Model):
     IDProducto = models.ForeignKey(tblProductos, on_delete=models.DO_NOTHING, null=True)
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     IDTolva = models.ForeignKey(tblTolva, on_delete=models.DO_NOTHING, null=True)
+    SeSirve = models.CharField(max_length=15, null=True)
     CantidadSolicitada = models.IntegerField(null=True)
+    Cantidad1 = models.IntegerField(null=True)
+    Cantidad2 = models.IntegerField(null=True)
     CantidadServida = models.IntegerField(null=True)
-    Fecha = models.DateTimeField(max_length=150, null=True)
-    FechaServida = models.DateTimeField(max_length=150, null=True)
+    Porcentaje = models.IntegerField(null=True)
+    Fecha = models.DateTimeField(null=True)
+    FechaServida1 = models.DateTimeField(null=True)
+    FechaServida2 = models.DateTimeField(null=True)
 
 
   

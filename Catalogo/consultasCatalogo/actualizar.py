@@ -5,6 +5,7 @@ from django.db.models import Q
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.utils import timezone
+from Aplicacion.views import servicioActivo
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ACTUALIZAR DATOS CATALOGOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # -------------------------------------------------------OPERADORES--------------------------------------------------------
@@ -115,6 +116,7 @@ def actualizarRecetasProductos(request):
     return redirect('catalogo:AR_Producto', ID=producto_v)
 # --------------------------------------------------------CORRALES---------------------------------------------------------
 def actualizarCorral(request):
+    ServiciosWeb = servicioActivo() 
     id = request.POST['id']
     clave = request.POST['clave']
     corral_v = request.POST['corral'].upper().strip()
