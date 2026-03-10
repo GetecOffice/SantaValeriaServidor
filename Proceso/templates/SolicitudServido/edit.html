@@ -71,7 +71,7 @@
                                                         <select class="select2 form-control col-12" name="producto[]"
                                                             required>
                                                             <option value="{{Dato.IDProducto_id }}">---{{Dato.IDProducto_id__Descripcion}}---</option>
-                                                            {% for Producto in FEProductos %}
+                                                            {% for Producto in FEProducto %}
                                                             <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}
                                                             </option>
                                                             {% endfor %}

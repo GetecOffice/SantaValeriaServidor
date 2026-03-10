@@ -79,9 +79,8 @@ class tblRepartidor(models.Model):
     CantidadSolicitada = models.IntegerField(null=True)
     Cantidad1 = models.IntegerField(null=True)
     Cantidad2 = models.IntegerField(null=True)
-    CantidadServida = models.IntegerField(null=True)
     Porcentaje = models.IntegerField(null=True)
-    Fecha = models.DateTimeField(null=True)
+    FechaSol = models.DateTimeField(null=True)
     FechaServida1 = models.DateTimeField(null=True)
     FechaServida2 = models.DateTimeField(null=True)
 

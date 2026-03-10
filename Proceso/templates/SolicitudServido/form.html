@@ -70,7 +70,7 @@
                                                     <span class="fs-16 text-black font-w400">
                                                         <select class="select2 form-control col-12" name="producto[]"
                                                             required>
-                                                            <option value="2">SELECCIONE UN PRODUCTO</option>
+                                                            <option value="">SELECCIONE UN PRODUCTO</option>
                                                             {% for Producto in FEProductos %}
                                                             <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}
                                                             </option>
@@ -80,7 +80,7 @@
                                                 </td>
                                                 <td colspan="3">
                                                     <input type="number" name="cantidadSol[]" class="form-control input"
-                                                        value="100">
+                                                        value="0">
                                                     <input type="hidden" name="id[]" value="{{Dato.ID}}">
                                                 </td>
                                                 <td colspan="3">

@@ -39,8 +39,8 @@ def guardarSolicitudServido(request):
             clave_int = folio_v
             formatoClave = 'S-{:06d}'.format(clave_int)         
             tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
-            IDEstatus_id = 3, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0,  CantidadServida =0, 
-            Fecha = FechaDeHoy, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
+            IDEstatus_id = 8, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
+            FechaSol = FechaDeHoy, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
 
         porcentaje_save = tblConfiguracion.objects.get(ID=1)
         porcentaje_save.Porcentaje = porcentaje_v
@@ -70,7 +70,7 @@ def guardarSolicitudServido1(request):
 
     tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =corral, IDProducto_id = producto, 
     IDEstatus_id = estatus, CantidadSolicitada = cantidadSol, CantidadServida =cantidadSer, 
-    Fecha = fechaSol, FechaServida = fechaSer) 
+    FechaSol = fechaSol, FechaServida = fechaSer) 
 
     messages.success(request, 'El Servido Manual se ha registrado exitosamente')
     if request.method == 'POST':
@@ -122,7 +122,7 @@ def guardarServidosManuales(request):
 
     tblRepartidor.objects.create(Folio = formatoClave,  IDCliente_id = cliente, IDCorral_id =corral, IDProducto_id = producto, 
     IDEstatus_id = estatus, CantidadSolicitada = cantidadSol, CantidadServida =cantidadSer, 
-    Prioridad =prioridad, Fecha = fechaSol, FechaServida = fechaSer
+    Prioridad =prioridad, FechaSol = fechaSol, FechaServida = fechaSer
     ) 
 
     messages.success(request, 'El Servido Manual se ha registrado exitosamente')

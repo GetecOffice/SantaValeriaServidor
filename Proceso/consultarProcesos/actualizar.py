@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from datetime import datetime, timedelta
 from django.utils import timezone
@@ -52,32 +52,31 @@ def actualizarOrdenServidos(request):
     if request.method == 'POST':
         id_v = request.POST.getlist('id[]')
         producto_v = request.POST.getlist('producto[]')
-        cantidadSer_v = request.POST.getlist('cantidadSer[]')
+        cantidadSol_v = request.POST.getlist('cantidadSol[]')
         seSirve_v = request.POST.getlist('seSirve[]')
-        # FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
-
-        producto_instancia = tblProductos.objects.get(ID = producto_v)
+    
         solicitudes = []
-        for i in range(len(cantidadSer_v)):
-            if cantidadSer_v[i] and float(cantidadSer_v[i]) != 0:
+        for i in range(len(cantidadSol_v)):
+            if cantidadSol_v[i]:
+                producto_instancia = tblProductos.objects.get(ID=int(producto_v[i]))
+
                 solicitud = {
                     'id': id_v[i],
                     'seSirve': seSirve_v[i],
-                    'producto': producto_v[i],
-                    'cantidadSer': float(cantidadSer_v[i])
+                    'producto': producto_instancia,
+                    'cantidadSer': float(cantidadSol_v[i])
                 }
                 solicitudes.append(solicitud)
 
         for solicitud in solicitudes:
-            IDFilaTabla_v = solicitud['id']
             servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
             servidos_save.SeSirve = solicitud['seSirve']
-            servidos_save.CantidadServida = solicitud['cantidadSer']
+            servidos_save.CantidadSolicitada = solicitud['cantidadSer']
             servidos_save.IDProducto = solicitud['producto']
             servidos_save.save()
 
-        messages.success(request, f'El Servido se ha actualizado exitosamente.')
-        return redirect('proceso:T_Servidos')
+        messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
+        return redirect('proceso:T_Solicitud_Servidos')
         
 def actualizarCantidadServidosManual(request):
     if request.method == 'POST':

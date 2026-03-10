@@ -16,8 +16,8 @@ def editarSolicitudServidos(request):
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
 
         TEServidos = tblRepartidor.objects.filter(
-            Fecha__gte=fecha,
-            Fecha__lt=fecha + timedelta(minutes=2)
+            FechaSol__gte=fecha,
+            FechaSol__lt=fecha + timedelta(minutes=2)
         ).values(
             'ID', 'Folio',
             'IDCorral_id__Descripcion',
@@ -26,14 +26,13 @@ def editarSolicitudServidos(request):
             'IDProducto_id',
             'IDEstatus_id',
             'CantidadSolicitada',
-            'CantidadServida',
             'SeSirve',
-            'Fecha',
+            'FechaSol',
             'FechaServida1'
         )
         print("servidos")
         FECorral = tblCorrales.objects.all().order_by('Descripcion')
-        FEProducto = tblProductos.objects.all().order_by('Descripcion')
+        FEProducto = tblProductos.objects.all().exclude(ID = 1).order_by('Descripcion')
         FEEstatus = tblEstatus.objects.filter(ID=3).order_by('Descripcion')
     return render(request, "SolicitudServido/edit.html",{'TEServidos': TEServidos, 'fecha':fecha,
     'FECorral': FECorral,'FEProducto': FEProducto, 'FEEstatus': FEEstatus, 'ServiciosWeb':ServiciosWeb})
@@ -44,8 +43,8 @@ def editarServidosManuales(request, ID):
     Estatus = TEServidos.IDEstatus.ID
     Producto = TEServidos.IDProducto.ID
     Corral = TEServidos.IDCorral.ID
-    fecha = TEServidos.Fecha
-    fechaServida = TEServidos.FechaServida
+    fecha = TEServidos.FechaSol
+    fechaServida = TEServidos.FechaServida1
     FiltradoEstatus= tblEstatus.objects.get(ID=Estatus)
     FiltradoProducto= tblProductos.objects.get(ID=Producto)
     FiltradoCorral= tblCorrales.objects.get(ID=Corral)

@@ -135,12 +135,12 @@
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.Fecha }}</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
                                             <td>
                                                 <div class="accion-grupo">
                                                     <form action="{% url 'proceso:E_Solicitud_Servidos' %}" method="POST">
                                                         {% csrf_token %}
-                                                        <input type="hidden" name="fecha" value="{{ Dato.Fecha|date:'Y-m-d H:i' }}">
+                                                        <input type="hidden" name="fecha" value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
                                                         <button class="accion-btn accion-right" type="submit">
                                                             Editar ✎
                                                         </button>
@@ -168,12 +168,12 @@
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.Fecha }}</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
                                             <td>
                                                 <div class="accion-grupo">
                                                     <form action="{% url 'proceso:R_Servidos' %}" method="POST">
                                                         {% csrf_token %}
-                                                        <input type="hidden" name="fecha" value="{{ Dato.Fecha|date:'Y-m-d H:i' }}">
+                                                        <input type="hidden" name="fecha" value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
                                                         <button class="accion-btn accion-left" type="submit">
                                                             + Replicar
                                                         </button>

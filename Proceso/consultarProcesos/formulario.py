@@ -37,8 +37,8 @@ def FormularioReplicarServido(request):
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
 
         TEServidos = tblRepartidor.objects.filter(
-            Fecha__gte=fecha,
-            Fecha__lt=fecha + timedelta(minutes=2)
+            FechaSol__gte=fecha,
+            FechaSol__lt=fecha + timedelta(minutes=2)
         ).values(
             'ID', 'Folio',
             'IDCorral_id__Descripcion',
@@ -48,14 +48,13 @@ def FormularioReplicarServido(request):
             'IDProducto_id',
             'IDEstatus_id',
             'CantidadSolicitada',
-            'CantidadServida',
             'SeSirve',
-            'Fecha',
+            'FechaSol',
             'FechaServida1'
         )
     registro = tblRepartidor.objects.filter(
-            Fecha__gte=fecha,
-            Fecha__lt=fecha + timedelta(minutes=2)
+            FechaSol__gte=fecha,
+            FechaSol__lt=fecha + timedelta(minutes=2)
         ).first()
     porcentaje = registro.Porcentaje if registro else None
     FECorrales = tblCorrales.objects.order_by('ID')
