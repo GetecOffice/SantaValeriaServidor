@@ -17,7 +17,7 @@ def TablaSolicitudServido(request):
     ServiciosWeb = servicioActivo() 
     TGServidos = (
         tblRepartidor.objects
-        .filter(Q(IDEstatus_id=8) | Q(IDEstatus_id=9))
+        .filter(Q(IDEstatus_id=8) | Q(IDEstatus_id=13))
         .annotate(fecha=TruncDate('FechaSol'))
         .values('FechaSol')
         .annotate(
@@ -25,7 +25,8 @@ def TablaSolicitudServido(request):
             total_registros=Count('ID'),
             total_estatus3=Count('ID', filter=Q(SeSirve="Si")),
             productos_distintos=Count('IDProducto_id', distinct=True),
-            porcentaje=Max('Porcentaje')
+            porcentaje=Max('Porcentaje'),
+            estatus=Max('IDEstatus_id__Descripcion')
         )
         .order_by('-FechaSol')
     )
@@ -39,7 +40,8 @@ def TablaSolicitudServido(request):
             total_registros=Count('ID'),
             total_estatus3=Count('ID', filter=Q(SeSirve="Si")),
             productos_distintos=Count('IDProducto_id', distinct=True),
-            porcentaje=Max('Porcentaje')
+            porcentaje=Max('Porcentaje'),
+            estatus=Max('IDEstatus_id__Descripcion')
         )
         .order_by('-FechaSol')
     )

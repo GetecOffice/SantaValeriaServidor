@@ -50,6 +50,7 @@ def actualizarServidosManual(request):
     
 def actualizarOrdenServidos(request):
     if request.method == 'POST':
+        porcentaje_v = int(request.POST.get('porcentaje'))
         id_v = request.POST.getlist('id[]')
         producto_v = request.POST.getlist('producto[]')
         cantidadSol_v = request.POST.getlist('cantidadSol[]')
@@ -73,6 +74,8 @@ def actualizarOrdenServidos(request):
             servidos_save.SeSirve = solicitud['seSirve']
             servidos_save.CantidadSolicitada = solicitud['cantidadSer']
             servidos_save.IDProducto = solicitud['producto']
+            servidos_save.Porcentaje = porcentaje_v
+
             servidos_save.save()
 
         messages.success(request, f'La orden de servido se ha actualizado exitosamente.')

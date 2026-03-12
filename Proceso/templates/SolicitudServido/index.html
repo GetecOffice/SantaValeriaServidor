@@ -79,7 +79,7 @@
                         <div class="card-tabs my-5 mt-sm-0 px-5 mx-3">
                             <ul class="nav nav-tabs w-100 d-flex justify-content-between">
                                 <li class="nav-item">
-                                    <a class="nav-link active">Corrales pendientes</a>
+                                    <a class="nav-link active">ORDENES DE SERVIDO</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{% url 'proceso:FT_Consolidacion' %}" class="nav-link">Cargar en tolva</a>
@@ -111,11 +111,12 @@
                                                 CANTIDAD
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
+                                                ESTATUS
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
                                                 FECHA PETICION
                                             </th>
-                                            <!-- <th class="text-black fs-16 font-w600 th-responsive">
-                                                FECHA A SERVIR
-                                            </th> -->
+
 
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 ACCIÓN
@@ -124,70 +125,101 @@
                                     </thead>
                                     <tbody>
 
-                                    <!-- PENDIENTES -->
-                                    <tr class="tabla-titulo">
-                                        <td colspan="6" class="text-black fs-20 font-w600">PENDIENTE</td>
-                                    </tr>
+                                        <!-- PENDIENTES -->
+                                        <tr class="tabla-titulo">
+                                            <td colspan="6" class="text-black fs-20 font-w600">PENDIENTE</td>
+                                        </tr>
 
-                                    {% for Dato in TGServidos %}                                    
+                                        {% for Dato in TGServidos %}
                                         <tr>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.porcentaje }} %</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.porcentaje }} %</span>
+                                            </td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
                                             <td>
                                                 <div class="accion-grupo">
-                                                    <form action="{% url 'proceso:E_Solicitud_Servidos' %}" method="POST">
+                                                    <form action="{% url 'proceso:E_Solicitud_Servidos' %}"
+                                                        method="POST">
                                                         {% csrf_token %}
-                                                        <input type="hidden" name="fecha" value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
+                                                        <input type="hidden" name="porcentaje"
+                                                            value="{{ Dato.porcentaje }}">
+                                                        <input type="hidden" name="fecha"
+                                                            value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
                                                         <button class="accion-btn accion-right" type="submit">
                                                             Editar ✎
                                                         </button>
                                                     </form>
-                                                </div>                                               
+                                                    <form action="{% url 'descargas:PDF_Orden_Servidos' %}"
+                                                        method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="porcentaje"
+                                                            value="{{ Dato.porcentaje }}">
+                                                        <input type="hidden" name="fecha"
+                                                            value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
+                                                        <button class="accion-btn accion-right" type="submit">
+                                                            PDF 📄
+                                                        </button>
+                                                    </form>                                                    
+                                                </div>
                                             </td>
-                                        </tr>                                    
+                                        </tr>
                                         {% empty %}
                                         <tr>
                                             <td colspan="6" style="text-align:center;">
                                                 No hay pendientes
                                             </td>
-                                        </tr>                                        
-                                    {% endfor %}
+                                        </tr>
+                                        {% endfor %}
 
 
-                                    <!-- HISTORIAL -->
-                                    <tr class="tabla-titulo">
-                                        <td colspan="6" class="text-black fs-20 font-w600">HISTORIAL</td>
-                                    </tr>
+                                        <!-- HISTORIAL -->
+                                        <tr class="tabla-titulo">
+                                            <td colspan="6" class="text-black fs-20 font-w600">HISTORIAL</td>
+                                        </tr>
 
-                                    {% for Dato in THServidos %}                                        
+                                        {% for Dato in THServidos %}
                                         <tr>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.porcentaje }} %</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.porcentaje }} %</span>
+                                            </td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
                                             <td>
                                                 <div class="accion-grupo">
                                                     <form action="{% url 'proceso:R_Servidos' %}" method="POST">
                                                         {% csrf_token %}
-                                                        <input type="hidden" name="fecha" value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
+                                                        <input type="hidden" name="fecha"
+                                                            value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
                                                         <button class="accion-btn accion-left" type="submit">
                                                             + Replicar
                                                         </button>
                                                     </form>
-                                                </div>                                                
+                                                      <form action="{% url 'descargas:PDF_Orden_Servidos' %}"
+                                                        method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="porcentaje"
+                                                            value="{{ Dato.porcentaje }}">
+                                                        <input type="hidden" name="fecha"
+                                                            value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
+                                                        <button class="accion-btn accion-right" type="submit">
+                                                            PDF 📄
+                                                        </button>
+                                                    </form>                                      
+                                                </div>
                                             </td>
-                                        </tr>       
+                                        </tr>
                                         {% empty %}
                                         <tr>
                                             <td colspan="6" style="text-align:center;">
                                                 No hay pendientes
                                             </td>
-                                        </tr>                                                                      
-                                    {% endfor %}
+                                        </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

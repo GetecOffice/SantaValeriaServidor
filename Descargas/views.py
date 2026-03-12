@@ -3,18 +3,17 @@ from django.shortcuts import render
 # Create your views here.
 from django.template.loader import render_to_string
 from io import BytesIO
-from django.db.models import Q
+
 from xhtml2pdf import pisa
 from django.templatetags.static import static
 from datetime import datetime, timedelta, date
 from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.http import HttpResponse
-from django.db import connection
 from django.db.models import Sum
 # IMPORT PARA CORREOS ELECTRONICOS
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
+
+from django.db.models import F, FloatField, ExpressionWrapper
 #!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -41,7 +40,8 @@ def cargar_folio(valor):
         9: 'FolioRepMovSalM',
         10: 'FolioRepMovAnim',
         11: 'FolioRepMovAnCo',
-        12: 'FolioRepMovAnCl'
+        12: 'FolioRepMovAnCl',
+        13: 'FolioOrdenServ'
     }
     
     if valor in folio_map:
@@ -307,6 +307,68 @@ def movimientoAnimales(request):
     response['Content-Disposition'] = f'attachment; filename="{mov} Movimiento Animales {formatted_fecha_actual}.pdf"'
     return response
 # -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# --------------------------------------------------------- PDF PARA ORDENES DE SERVIDO ---------------------------------------------------------
+def ordenServidoPDF(request):
+    valor = 13
+    formatoClave = cargar_folio(valor)    
+    # datos para el pdf
+    fecha_actual = datetime.today()
+    formatted_fecha_actual = fecha_actual.strftime("%Y-%m-%d %H-%M-%S")
+    
+    # datos para el filtrado
+    fecha_str = request.POST.get('fecha')
+    porcentaje = request.POST.get('porcentaje')
+    fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
+    TEServidos = tblRepartidor.objects.filter(
+        FechaSol__gte=fecha,
+        FechaSol__lt=fecha + timedelta(minutes=2),
+        SeSirve='Si'
+    ).annotate(
+        calcCantidad1=ExpressionWrapper(
+            F('CantidadSolicitada') * F('Porcentaje') / 100,
+            output_field=FloatField()
+        ),
+        calcCantidad2=ExpressionWrapper(
+            F('CantidadSolicitada') - (F('CantidadSolicitada') * F('Porcentaje') / 100),
+            output_field=FloatField()
+        )
+    ).values(
+        'ID',
+        'Folio',
+        'IDCorral_id__Descripcion',
+        'IDProducto_id__Descripcion',
+        'IDEstatus_id__Descripcion',
+        'IDProducto_id',
+        'IDEstatus_id',
+        'Porcentaje',
+        'CantidadSolicitada',
+        'calcCantidad1',
+        'calcCantidad2',
+        'SeSirve',
+        'FechaSol',
+        'FechaServida1'
+    ) 
+
+
+    # Render the HTML template with the data
+    html_string = render_to_string('Descargas/PDF/OrdenesServido/index.html', { 'fecha_actual': fecha_actual, 'porcentaje':porcentaje, 'TEServidos':TEServidos, 'folio': formatoClave})
+
+    # Create a BytesIO buffer to receive the PDF
+    pdf_buffer = BytesIO()
+
+    # Generate the PDF using xhtml2pdf
+    pisa.CreatePDF(html_string, dest=pdf_buffer)
+
+    # Get the PDF content from the buffer
+    pdf_file = pdf_buffer.getvalue()
+
+    # Create an HTTP response with the attached PDF file
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="Orden de servido manual {formatted_fecha_actual}.pdf"'
+    return response
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!

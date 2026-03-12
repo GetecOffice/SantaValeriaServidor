@@ -10,6 +10,7 @@ class tblConfiguracion(models.Model):
     FechaActualizacion = models.DateTimeField(null=True)
     FolioSalMaquila = models.CharField(max_length=10, null=True)
     FolioRepServMov = models.CharField(max_length=10, null=True)
+    FolioOrdenServ = models.CharField(max_length=10, null=True)
     
         
 # -------------------------------------------------------SUBTABLAS-------------------------------------------------------

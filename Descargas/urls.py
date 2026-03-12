@@ -13,6 +13,8 @@ urlpatterns = [
     # path('Descarga_PDF_Salida_Materia_Prima/', views.salidaMateriaPrima, name="PDF_Salida_Materia_Prima"), # PDF salida materias primasx
     # path('Descarga_PDF_Movimiento_Animales/', views.movimientoAnimales, name="PDF_Movimientos_Animales"), # PDF salida materias primasx
 
+    path('Descarga_PDF_Ordenes_Servidos/', views.ordenServidoPDF, name="PDF_Orden_Servidos"), # PDF movimientos servidosx
+
     # PDF Reportes
     path('Descarga_PDF_Reporte_Movimientos_Servidos/', views.reporteMovimientoServidos, name="PDF_Reportes_Mov_Servidos"), # PDF movimientos servidosx
     # path('Descarga_PDF_Reporte_Liquidacion_Servidos/', views.reporteLiquidacionServidos, name="PDF_Reportes_Liq_Servidos"), # PDF liquidacion servidosx

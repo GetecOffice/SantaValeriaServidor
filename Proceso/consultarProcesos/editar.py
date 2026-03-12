@@ -12,6 +12,7 @@ def editarSolicitudServidos(request):
     ServiciosWeb = servicioActivo() 
     if request.method == 'POST':
         fecha_str = request.POST.get('fecha')
+        porcentaje = request.POST.get('porcentaje')
 
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
 
@@ -34,7 +35,7 @@ def editarSolicitudServidos(request):
         FECorral = tblCorrales.objects.all().order_by('Descripcion')
         FEProducto = tblProductos.objects.all().exclude(ID = 1).order_by('Descripcion')
         FEEstatus = tblEstatus.objects.filter(ID=3).order_by('Descripcion')
-    return render(request, "SolicitudServido/edit.html",{'TEServidos': TEServidos, 'fecha':fecha,
+    return render(request, "SolicitudServido/edit.html",{'TEServidos': TEServidos, 'fecha':fecha, 'porcentaje':porcentaje,
     'FECorral': FECorral,'FEProducto': FEProducto, 'FEEstatus': FEEstatus, 'ServiciosWeb':ServiciosWeb})
 
 def editarServidosManuales(request, ID):
