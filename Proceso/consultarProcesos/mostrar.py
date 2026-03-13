@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Sum
 from django.db.models import Q
+from datetime import datetime, timedelta
 # LLAMAR ARCHIVOS LOCALES
 from Aplicacion.forms import *
 from Aplicacion.models import *
@@ -37,6 +38,7 @@ def TablaSolicitudServido(request):
         .values('FechaSol')
         .annotate(
             total_cantidad=Sum('CantidadSolicitada'),
+            total_servido = Sum(F('Cantidad1') + F('Cantidad2')),
             total_registros=Count('ID'),
             total_estatus3=Count('ID', filter=Q(SeSirve="Si")),
             productos_distintos=Count('IDProducto_id', distinct=True),
@@ -47,6 +49,68 @@ def TablaSolicitudServido(request):
     )
     return render(request, 'SolicitudServido/index.html',{'THServidos': THServidos, 'TGServidos':TGServidos, 'ServiciosWeb':ServiciosWeb })
 
+def TablaOrdenesServido(request):
+    ServiciosWeb = servicioActivo() 
+    ultimo_contacto = tblRepartidor.objects.order_by('-ID').first()
+    if ultimo_contacto:
+        ultimo_folio = ultimo_contacto.ID + 1
+    else:
+        ultimo_folio = 1
+    if request.method == 'POST':
+        fecha_str = request.POST.get('fecha')
+
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
+
+        TEServidos = tblRepartidor.objects.filter(
+            FechaSol__gte=fecha,
+            FechaSol__lt=fecha + timedelta(minutes=2)
+        ).annotate(
+        calcCantidad1=ExpressionWrapper(
+            F('CantidadSolicitada') * F('Porcentaje') / 100,
+            output_field=FloatField()
+        ),
+        calcCantidad2=ExpressionWrapper(
+            F('CantidadSolicitada') - (F('CantidadSolicitada') * F('Porcentaje') / 100),
+            output_field=FloatField()
+        ),
+        calcSuma=ExpressionWrapper(
+            F('Cantidad1') + F('Cantidad2'),
+            output_field=FloatField()
+        )
+        ).values(
+            'ID', 'Folio',
+            'IDCorral_id__Descripcion',
+            'IDCorral_id',
+            'IDProducto_id__Descripcion',
+            'IDEstatus_id__Descripcion',
+            'IDProducto_id',
+            'IDEstatus_id',
+            'CantidadSolicitada',
+            'calcCantidad1',
+            'calcCantidad2',  
+            'calcSuma',                 
+            'Cantidad1',
+            'Cantidad2',                       
+            'SeSirve',
+            'FechaSol',
+            'FechaServida1',
+            'FechaServida2'
+            
+        )
+    registro = tblRepartidor.objects.filter(
+            FechaSol__gte=fecha,
+            FechaSol__lt=fecha + timedelta(minutes=2)
+        ).first()
+    porcentaje = registro.Porcentaje if registro else None
+    FECorrales = tblCorrales.objects.order_by('ID')
+    FETolva = tblTolva.objects.exclude(ID=1).order_by('Alias')
+    FEProductos = tblProductos.objects.all().exclude(ID=1).order_by('Descripcion')
+    FEstatus = tblEstatus.objects.filter(ID__lte=2).order_by('Descripcion')
+    FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
+
+    
+    return render(request, 'SolicitudServido/mostrar.html',{  'FECorrales': FECorrales, 'ultimo_folio':ultimo_folio, 'FETolva':FETolva, 'porcentaje':porcentaje,
+    'FechaDeHoy':FechaDeHoy, 'FEstatus': FEstatus, 'FEProductos':FEProductos, 'ServiciosWeb':ServiciosWeb, 'TEServidos':TEServidos})
 def TablaServidoCorral(request):
     ServiciosWeb = servicioActivo() 
     FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d')

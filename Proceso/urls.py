@@ -10,6 +10,7 @@ urlpatterns = [
 
     # DATOS DEL AREA DE SERVIDOS
     path('Solicitud_Servidos/', mostrar.TablaSolicitudServido, name='T_Solicitud_Servidos'),
+    path('Orden_Servidos/', mostrar.TablaOrdenesServido, name='T_Orden_Servidos'),
     path('Corrales_Servidos/', mostrar.TablaServidoCorral, name='T_Corrales_Servidos'),
     path('Consolidacion_Servido/', mostrar.TablaConsolidacionServido, name='T_Consolidacion'),
     path('Consolidacion_Servido/Filtro/Tolva/<str:ID>/<int:Estatus>/<int:Producto>/', mostrar.TablaTolvaServido),

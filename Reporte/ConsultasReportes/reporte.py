@@ -16,13 +16,13 @@ def reporteServidosMovimientos(request):
         Fecha2 = request.POST.get('fecha2')
         consulta_sql = """  
             SELECT r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-            r.CantidadSolicitada, r.CantidadServida, r.Fecha, r.FechaServida
+            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1
             FROM Aplicacion_tblrepartidor r
             LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
             LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
             LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
             WHERE r.IDEstatus_id IN (10,11)
-            AND DATE(r.FechaServida) BETWEEN %s AND %s
+            AND DATE(r.FechaServida1) BETWEEN %s AND %s
             """
         with connection.cursor() as cursor:
             cursor.execute(consulta_sql, [Fecha, Fecha2])
@@ -33,13 +33,13 @@ def reporteServidosMovimientos(request):
     else:
         consulta_sql = """  
             SELECT r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-            r.CantidadSolicitada, r.CantidadServida, r.Fecha, r.FechaServida
+            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1
             FROM Aplicacion_tblrepartidor r
             LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
             LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
             LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
             WHERE r.IDEstatus_id IN (10,11)
-            AND DATE(r.FechaServida) BETWEEN %s AND %s
+            AND DATE(r.FechaServida1) BETWEEN %s AND %s
         """
 
         with connection.cursor() as cursor:

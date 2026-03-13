@@ -39,6 +39,11 @@
         border-right: 1px solid #cfcfcf;
     }
 
+    .accion-center {
+        border-right: 1px solid #cfcfcf;
+        width: 90px;
+    }
+
     .accion-right {
         width: 110px;
     }
@@ -76,23 +81,7 @@
                         </div>
                     </div>
                     <div class="card-body tab-content p-0">
-                        <div class="card-tabs my-5 mt-sm-0 px-5 mx-3">
-                            <ul class="nav nav-tabs w-100 d-flex justify-content-between">
-                                <li class="nav-item">
-                                    <a class="nav-link active">ORDENES DE SERVIDO</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'proceso:FT_Consolidacion' %}" class="nav-link">Cargar en tolva</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'proceso:T_Servidos' %}" class="nav-link">Captura manual</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{% url 'proceso:T_Corrales_Servidos' %}" class="nav-link">Corrales
-                                        servidos</a>
-                                </li>
-                            </ul>
-                        </div>
+
                         <div class="tab-pane active show fade" id="monthly" role="tabpanel">
                             <div class="table-responsive">
                                 <table class="table table-responsive-md card-table transactions-table" id="miTabla">
@@ -108,11 +97,11 @@
                                                 PRODUCTO
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                CANTIDAD
+                                                CANTIDAD SOL / SER KG
                                             </th>
-                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                            <!-- <th class="text-black fs-16 font-w600 th-responsive">
                                                 ESTATUS
-                                            </th>
+                                            </th> -->
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 FECHA PETICION
                                             </th>
@@ -137,7 +126,7 @@
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td>
+                                            <!-- <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td> -->
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
                                             <td>
                                                 <div class="accion-grupo">
@@ -162,7 +151,7 @@
                                                         <button class="accion-btn accion-right" type="submit">
                                                             PDF 📄
                                                         </button>
-                                                    </form>                                                    
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -177,7 +166,8 @@
 
                                         <!-- HISTORIAL -->
                                         <tr class="tabla-titulo">
-                                            <td colspan="6" class="text-black fs-20 font-w600">HISTORIAL</td>
+                                            <td colspan="6" class="text-black fs-20 font-w600">HISTORIAL DE ORDENES
+                                                SERVIDAS</td>
                                         </tr>
 
                                         {% for Dato in THServidos %}
@@ -186,8 +176,9 @@
                                             </td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
                                             <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td>
+                                            <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG /
+                                                    {{ Dato.total_servido }} KG</span></td>
+                                            <!-- <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td> -->
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
                                             <td>
                                                 <div class="accion-grupo">
@@ -199,7 +190,17 @@
                                                             + Replicar
                                                         </button>
                                                     </form>
-                                                      <form action="{% url 'descargas:PDF_Orden_Servidos' %}"
+                                                    <form action="{% url 'proceso:T_Orden_Servidos' %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="porcentaje"
+                                                            value="{{ Dato.porcentaje }}">
+                                                        <input type="hidden" name="fecha"
+                                                            value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
+                                                        <button class="accion-btn accion-center" type="submit">
+                                                            👁 Ver
+                                                        </button>
+                                                    </form>
+                                                    <!-- <form action="{% url 'descargas:PDF_Orden_Servidos' %}"
                                                         method="POST">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="porcentaje"
@@ -207,9 +208,9 @@
                                                         <input type="hidden" name="fecha"
                                                             value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
                                                         <button class="accion-btn accion-right" type="submit">
-                                                            PDF 📄
+                                                            📄 PDF 
                                                         </button>
-                                                    </form>                                      
+                                                    </form> -->
                                                 </div>
                                             </td>
                                         </tr>
