@@ -44,6 +44,7 @@ urlpatterns = [
     # ACTUALIZAR PROCESOS
     path('ActualizarServidorManual/', actualizar.actualizarServidosManual, name="A_Solicitud_Servidos"),
     path('Actualizar_Orden_Servidos/', actualizar.actualizarOrdenServidos, name="A_Orden_Servidos"),
+    path('Actualizar_Orden_Visible/', actualizar.ordenVisible, name="ordenVisible"),
     path('ActualizarServidorManualCantidad/', actualizar.actualizarCantidadServidosManual, name="Cantidad_servidos_manuales"),
     path('ActualizarFormuladoManualCantidad/', actualizar.actualizarCantidadFormuladoManual, name="Cantidad_Formulado_manuales"),
     path('ActualizarServidosATolva/', actualizar.actualizarServidosATolva, name="A_Servidos_Tolva"),

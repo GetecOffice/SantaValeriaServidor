@@ -7,6 +7,8 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from django.db.models import Sum
 from django.db import transaction
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ACTUALIZAR DATOS PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 #   QUEDA INHABILITADO TEMPORALMENTE
@@ -81,6 +83,62 @@ def actualizarOrdenServidos(request):
         messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
         return redirect('proceso:T_Solicitud_Servidos')
         
+def actualizarOrdenServidos(request):
+    if request.method == 'POST':
+        porcentaje_v = int(request.POST.get('porcentaje'))
+        id_v = request.POST.getlist('id[]')
+        producto_v = request.POST.getlist('producto[]')
+        cantidadSol_v = request.POST.getlist('cantidadSol[]')
+        seSirve_v = request.POST.getlist('seSirve[]')
+    
+        solicitudes = []
+        for i in range(len(cantidadSol_v)):
+            if cantidadSol_v[i]:
+                producto_instancia = tblProductos.objects.get(ID=int(producto_v[i]))
+
+                solicitud = {
+                    'id': id_v[i],
+                    'seSirve': seSirve_v[i],
+                    'producto': producto_instancia,
+                    'cantidadSer': float(cantidadSol_v[i])
+                }
+                solicitudes.append(solicitud)
+
+        for solicitud in solicitudes:
+            servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
+            servidos_save.SeSirve = solicitud['seSirve']
+            servidos_save.CantidadSolicitada = solicitud['cantidadSer']
+            servidos_save.IDProducto = solicitud['producto']
+            servidos_save.Porcentaje = porcentaje_v
+
+            servidos_save.save()
+
+        messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
+        return redirect('proceso:T_Solicitud_Servidos')
+    
+def ordenVisible(request):
+
+    if request.method == "POST":
+
+        fecha_str = request.POST.get('fecha')
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d %H:%M")
+
+        # regresar los visibles a estatus 3
+        tblRepartidor.objects.filter(
+            IDEstatus_id=8
+        ).update(IDEstatus_id=3)
+
+        # poner en visible la nueva orden
+        actualizados = tblRepartidor.objects.filter(
+            FechaSol__gte=fecha,
+            FechaSol__lt=fecha + timedelta(minutes=2)
+        ).update(IDEstatus_id=8)
+
+        return JsonResponse({
+            "ok": True,
+            "registros_actualizados": actualizados
+        })
+          
 def actualizarCantidadServidosManual(request):
     if request.method == 'POST':
         id_v = request.POST.getlist('id[]')

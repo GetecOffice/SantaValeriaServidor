@@ -81,12 +81,15 @@
                         </div>
                     </div>
                     <div class="card-body tab-content p-0">
-
-                        <div class="tab-pane active show fade" id="monthly" role="tabpanel">
+                        <h4 style="justify-content: center; text-align: center;">ORDENES EN PROCESO</h4>
+                        <div class="tab-pane active show fade mb-5" id="monthly" role="tabpanel">
                             <div class="table-responsive">
                                 <table class="table table-responsive-md card-table transactions-table" id="miTabla">
                                     <thead>
                                         <tr>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                TOLVA
+                                            </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 % DESAYUNO
                                             </th>
@@ -99,9 +102,9 @@
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 CANTIDAD SOL / SER KG
                                             </th>
-                                            <!-- <th class="text-black fs-16 font-w600 th-responsive">
+                                            <th class="text-black fs-16 font-w600 th-responsive">
                                                 ESTATUS
-                                            </th> -->
+                                            </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 FECHA PETICION
                                             </th>
@@ -114,20 +117,72 @@
                                     </thead>
                                     <tbody>
 
-                                        <!-- PENDIENTES -->
-                                        <tr class="tabla-titulo">
-                                            <td colspan="6" class="text-black fs-20 font-w600">PENDIENTE</td>
-                                        </tr>
 
                                         {% for Dato in TGServidos %}
+
                                         <tr>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.porcentaje }} %</span>
+                                            <td>
+                                                {% for Datos in TFServidos %}
+                                                <span class="fs-16 text-black font-w400"
+                                                    title="Para hacer visible una orden para la tolva, primero termine la orden en proceso">
+                                                    Hacer visible...
+                                                </span>
+                                                {% empty %}
+                                                {% if Dato.idestatus == 8 %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input radioVisible" type="radio"
+                                                        data-fecha="{{ Dato.FechaSol|date:'Y-m-d H:i' }}"
+                                                        id="exampleRadios{{ Dato.ids }}" checked>
+
+                                                    <span class="fs-16 text-black font-w400"
+                                                        title="Hacer visible la orden para que la tolva la pueda recoger en su sistema">
+                                                        Mostrar en tolva...
+                                                    </span>
+                                                </div>
+                                                {% else %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input radioVisible" type="radio"
+                                                        data-fecha="{{ Dato.FechaSol|date:'Y-m-d H:i' }}"
+                                                        id="exampleRadios{{ Dato.ids }}">
+
+                                                    <span class="fs-16 text-black font-w400"
+                                                        title="Hacer visible la orden para que la tolva la pueda recoger en su sistema">
+                                                        Mostrar en tolva...
+                                                    </span>
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
                                             </td>
-                                            <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
-                                            <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG</span></td>
-                                            <!-- <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td> -->
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.porcentaje }} %
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    Se sirvieron {{ Dato.total_estatus3 }} corrales
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    Se sirvieron {{ Dato.productos_distintos }} productos
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.total_cantidad }} KG
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.estatus }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.FechaSol }}
+                                                </span>
+                                            </td>
                                             <td>
                                                 <div class="accion-grupo">
                                                     <form action="{% url 'proceso:E_Solicitud_Servidos' %}"
@@ -164,22 +219,72 @@
                                         {% endfor %}
 
 
-                                        <!-- HISTORIAL -->
-                                        <tr class="tabla-titulo">
-                                            <td colspan="6" class="text-black fs-20 font-w600">HISTORIAL DE ORDENES
-                                                SERVIDAS</td>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane active show fade mt-5" id="monthly" role="tabpanel">
+                            <h4 style="justify-content: center; text-align: center;">ORDENES SERVIDAS</h4>
+
+                            <div class="table-responsive">
+                                <table class="table table-responsive-md card-table transactions-table" id="miTabla">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                % DESAYUNO
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                CORRAL
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                PRODUCTO
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                CANTIDAD SOL / SER KG
+                                            </th>
+                                            <!-- <th class="text-black fs-16 font-w600 th-responsive">
+                                                ESTATUS
+                                            </th> -->
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                FECHA PETICION
+                                            </th>
+
+
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                ACCIÓN
+                                            </th>
                                         </tr>
+                                    </thead>
+                                    <tbody>
+
 
                                         {% for Dato in THServidos %}
                                         <tr>
                                             <td><span class="fs-16 text-black font-w400">{{ Dato.porcentaje }} %</span>
                                             </td>
-                                            <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.total_estatus3 }} corrales</span></td>
-                                            <td><span class="fs-16 text-black font-w400">Se sirvieron {{ Dato.productos_distintos }} productos</span></td>
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.total_cantidad }} KG /
-                                                    {{ Dato.total_servido }} KG</span></td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    Se sirvieron {{ Dato.total_estatus3 }} corrales
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    Se sirvieron {{ Dato.productos_distintos }} productos
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.total_cantidad }} KG /
+                                                    {{ Dato.total_servido }} KG
+                                                </span>
+                                            </td>
                                             <!-- <td><span class="fs-16 text-black font-w400">{{ Dato.estatus }}</span></td> -->
-                                            <td><span class="fs-16 text-black font-w400">{{ Dato.FechaSol }}</span></td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.FechaSol }}
+                                                </span>
+                                            </td>
                                             <td>
                                                 <div class="accion-grupo">
                                                     <form action="{% url 'proceso:R_Servidos' %}" method="POST">
@@ -232,4 +337,30 @@
     </div>
 </div>
 
+<script>
+    document.querySelectorAll(".radioVisible").forEach(radio => {
+
+        radio.addEventListener("change", function () {
+
+            let fecha = this.dataset.fecha
+
+            fetch("{% url 'proceso:ordenVisible' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: "fecha=" + fecha
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    location.reload();
+
+                })
+
+        })
+
+    })
+</script>
 {% endblock %}

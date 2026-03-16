@@ -39,7 +39,7 @@ def guardarSolicitudServido(request):
             clave_int = folio_v
             formatoClave = 'S-{:06d}'.format(clave_int)         
             tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
-            IDEstatus_id = 8, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
+            IDEstatus_id = 3, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
             FechaSol = FechaDeHoy, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
 
         porcentaje_save = tblConfiguracion.objects.get(ID=1)

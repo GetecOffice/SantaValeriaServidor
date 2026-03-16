@@ -18,7 +18,7 @@ def TablaSolicitudServido(request):
     ServiciosWeb = servicioActivo() 
     TGServidos = (
         tblRepartidor.objects
-        .filter(Q(IDEstatus_id=8) | Q(IDEstatus_id=13))
+        .filter(Q(IDEstatus_id=3) | Q(IDEstatus_id=8) | Q(IDEstatus_id=13))
         .annotate(fecha=TruncDate('FechaSol'))
         .values('FechaSol')
         .annotate(
@@ -27,10 +27,13 @@ def TablaSolicitudServido(request):
             total_estatus3=Count('ID', filter=Q(SeSirve="Si")),
             productos_distintos=Count('IDProducto_id', distinct=True),
             porcentaje=Max('Porcentaje'),
-            estatus=Max('IDEstatus_id__Descripcion')
+            estatus=Max('IDEstatus_id__Descripcion'),
+            idestatus=Max('IDEstatus_id'),
+            ids=Max('ID')
         )
         .order_by('-FechaSol')
     )
+    TFServidos = tblRepartidor.objects.filter(IDEstatus_id=13).annotate(fecha=TruncDate('FechaSol')).values('FechaSol').first()
     THServidos = (
         tblRepartidor.objects
         .filter( Q(IDEstatus_id=10))
@@ -47,7 +50,7 @@ def TablaSolicitudServido(request):
         )
         .order_by('-FechaSol')
     )
-    return render(request, 'SolicitudServido/index.html',{'THServidos': THServidos, 'TGServidos':TGServidos, 'ServiciosWeb':ServiciosWeb })
+    return render(request, 'SolicitudServido/index.html',{'THServidos': THServidos, 'TGServidos':TGServidos, 'ServiciosWeb':ServiciosWeb, 'TFServidos':TFServidos})
 
 def TablaOrdenesServido(request):
     ServiciosWeb = servicioActivo() 
