@@ -44,6 +44,7 @@
                                     <table class="table table-responsive-md card-table transactions-table" id="miTabla">
                                         <thead>
                                             <tr>
+
                                                 <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
                                                     CORRAL
                                                 </th>
@@ -56,11 +57,16 @@
                                                 <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
                                                     SE SIRVE
                                                 </th>
+                                                <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
+                                                    DUPLICAR
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for Dato in FECorrales %}
                                             <tr>
+
+
                                                 <td colspan="3">
                                                     <span class="fs-16 text-black font-w400">
                                                         {{Dato.Descripcion}}
@@ -68,9 +74,8 @@
                                                 </td>
                                                 <td colspan="3">
                                                     <span class="fs-16 text-black font-w400">
-                                                        <select class="select2 form-control col-12" name="producto[]"
-                                                            required>
-                                                            <option value="2">SELECCIONE UN PRODUCTO</option>
+                                                        <select class="select2 form-control col-12" name="producto[]">
+                                                            <option value="">SELECCIONE UN PRODUCTO</option>
                                                             {% for Producto in FEProductos %}
                                                             <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}
                                                             </option>
@@ -80,7 +85,7 @@
                                                 </td>
                                                 <td colspan="3">
                                                     <input type="number" name="cantidadSol[]" class="form-control input"
-                                                        value="100">
+                                                        value="0">
                                                     <input type="hidden" name="id[]" value="{{Dato.ID}}">
                                                 </td>
                                                 <td colspan="3">
@@ -91,6 +96,14 @@
                                                             <option value="No">No</option>
                                                         </select>
                                                     </span>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary btn-sm"
+                                                        onclick="duplicarFila(this)">
+                                                        +
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        onclick="eliminarFila(this)">-</button>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -115,5 +128,35 @@
         </div>
     </div>
 </div>
+<script> function duplicarFila(btn) {
+        let fila = btn.closest("tr"); // 🟢 Clonar SIN tocar la original 
+        let nuevaFila = fila.cloneNode(true); // 🔴 Limpiar inputs 
+        nuevaFila.querySelectorAll("input[type='number']").forEach(input => { input.value = 0; }); // 🔴 Limpiar selects 
+        nuevaFila.querySelectorAll("select").forEach(select => {
+            select.selectedIndex = 0; // 🔴 Eliminar basura de select2 si se clonó 
+            select.classList.remove("select2-hidden-accessible"); select.removeAttribute("data-select2-id");
+        }); // 🔴 Eliminar contenedores select2 clonados 
+        $(nuevaFila).find("span.select2").remove(); // Insertar fila nueva 
+        fila.parentNode.insertBefore(nuevaFila, fila.nextSibling); // 🔵 Inicializar select2 SOLO en la nueva fila 
+        $(nuevaFila).find('.select2').select2();
+    } 
+</script>
+<script>
+    function eliminarFila(btn) {
+        try {
+            let fila = btn.closest("tr");
+            let tbody = fila.parentNode;
 
+            if (tbody.querySelectorAll("tr").length <= 1) {
+                alert("Debe existir al menos una fila");
+                return;
+            }
+
+            fila.remove();
+
+        } catch (error) {
+            console.error("Error al eliminar fila:", error);
+        }
+    }
+</script>
 {% endblock %}

@@ -25,12 +25,12 @@ def guardarSolicitudServido(request):
         
         solicitudes = []
         for i in range(len(cantidadSol_v)):
-            if cantidadSol_v[i] :
+            if cantidadSol_v[i]  and int(cantidadSol_v[i]) != 0:
                 solicitud = {
                     'id': id_v[i],
                     'producto': producto_v[i],
                     'seSirve': seSirve_v[i],
-                    'cantidadSol': float(cantidadSol_v[i])
+                    'cantidadSol': int(cantidadSol_v[i])
                 }
                 solicitudes.append(solicitud)
 
