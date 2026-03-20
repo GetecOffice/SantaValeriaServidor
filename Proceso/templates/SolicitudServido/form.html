@@ -17,7 +17,7 @@
                             <a href="{% url 'proceso:T_Solicitud_Servidos'%}">
                                 <i class="bi bi-arrow-left-circle text-black fs-28"></i>
                             </a>
-                            <b>FORMULARIO SOLICITUD SERVIDO</b>
+                            <b>FORMULARIO ORDEN DE SERVIDO</b>
                         </h4>
                     </div>
                     <hr>
@@ -49,7 +49,7 @@
                                                     CORRAL
                                                 </th>
                                                 <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
-                                                    PRODUCTO
+                                                    FORMULA
                                                 </th>
                                                 <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
                                                     CANTIDAD SOLICITADA (KG)
@@ -57,9 +57,9 @@
                                                 <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
                                                     SE SIRVE
                                                 </th>
-                                                <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
+                                                <!-- <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
                                                     DUPLICAR
-                                                </th>
+                                                </th> -->
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -75,7 +75,7 @@
                                                 <td colspan="3">
                                                     <span class="fs-16 text-black font-w400">
                                                         <select class="select2 form-control col-12" name="producto[]">
-                                                            <option value="">SELECCIONE UN PRODUCTO</option>
+                                                            <option value="">SELECCIONE FORMUALCIÓN</option>
                                                             {% for Producto in FEProductos %}
                                                             <option value="{{ Producto.ID }}">{{ Producto.Descripcion }}
                                                             </option>
@@ -97,14 +97,14 @@
                                                         </select>
                                                     </span>
                                                 </td>
-                                                <td>
+                                                <!-- <td>
                                                     <button type="button" class="btn btn-primary btn-sm"
                                                         onclick="duplicarFila(this)">
                                                         +
                                                     </button>
                                                     <button type="button" class="btn btn-danger btn-sm"
                                                         onclick="eliminarFila(this)">-</button>
-                                                </td>
+                                                </td> -->
                                             </tr>
                                             {% endfor %}
                                         </tbody>

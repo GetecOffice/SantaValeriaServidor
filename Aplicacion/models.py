@@ -84,7 +84,7 @@ class tblRepartidor(models.Model):
     FechaSol = models.DateTimeField(null=True)
     FechaServida1 = models.DateTimeField(null=True)
     FechaServida2 = models.DateTimeField(null=True)
-
+    IDLoteMezclado = models.IntegerField(null = True)
 
   
     
