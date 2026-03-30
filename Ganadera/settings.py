@@ -111,14 +111,6 @@ DATABASES = {
 #    }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'ServidorSantaValeria.sqlite3',
-#     },
-#     'servidor': dj_database_url.config(default=os.getenv("url_database"))
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

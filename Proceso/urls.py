@@ -15,7 +15,7 @@ urlpatterns = [
     path('Consolidacion_Servido/', mostrar.TablaConsolidacionServido, name='T_Consolidacion'),
     path('Consolidacion_Servido/Filtro/Tolva/<str:ID>/<int:Estatus>/<int:Producto>/', mostrar.TablaTolvaServido),
     path('Consolidacion_Servido_Filtro/', mostrar.TablaFiltroServido, name='FT_Consolidacion'),
-    path('Servidos_Manuales/', mostrar.TablaServidoAnimales, name='T_Servidos'),
+    path('Servidos_Manuales/', mostrar.TablaServidoManual, name='T_Servidos_manuales'),
     
     path('Tolva_Servido/', mostrar.TablaTolva, name='T_Tolva_Servido'),
     path('Tolva_Servido_Se_Sirve/', mostrar.TablaTolvaServidoCorral, name='T_Se_Sirve'),
@@ -44,6 +44,7 @@ urlpatterns = [
     # ACTUALIZAR PROCESOS
     path('ActualizarServidorManual/', actualizar.actualizarServidosManual, name="A_Solicitud_Servidos"),
     path('Actualizar_Orden_Servidos/', actualizar.actualizarOrdenServidos, name="A_Orden_Servidos"),
+    path('Agregar_Orden_Servidos/', actualizar.agregarSolicitudServido, name="AA_Orden_Servidos"),
     path('Actualizar_Orden_Visible/', actualizar.ordenVisible, name="ordenVisible"),
     path('ActualizarServidorManualCantidad/', actualizar.actualizarCantidadServidosManual, name="Cantidad_servidos_manuales"),
     path('ActualizarFormuladoManualCantidad/', actualizar.actualizarCantidadFormuladoManual, name="Cantidad_Formulado_manuales"),

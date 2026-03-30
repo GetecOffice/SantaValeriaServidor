@@ -190,6 +190,8 @@
                                                         {% csrf_token %}
                                                         <input type="hidden" name="porcentaje"
                                                             value="{{ Dato.porcentaje }}">
+                                                        <input type="hidden" name="estatus"
+                                                            value="{{ Dato.idestatus }}">
                                                         <input type="hidden" name="fecha"
                                                             value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
                                                         <button class="accion-btn accion-right" type="submit">

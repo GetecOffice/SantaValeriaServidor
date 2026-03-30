@@ -83,38 +83,131 @@ def actualizarOrdenServidos(request):
         messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
         return redirect('proceso:T_Solicitud_Servidos')
         
-def actualizarOrdenServidos(request):
+def agregarSolicitudServido(request):
     if request.method == 'POST':
+        # VARIABLES PARA CONFIGURACION
+        fecha_v = request.POST.get('fecha')
+        estatus_v = int(request.POST.get('estatus'))
         porcentaje_v = int(request.POST.get('porcentaje'))
+        # LLENAR LA TABLA DE TBLREPARTIDOR
         id_v = request.POST.getlist('id[]')
-        producto_v = request.POST.getlist('producto[]')
+        # folio_v = int(request.POST.get('folio'))
         cantidadSol_v = request.POST.getlist('cantidadSol[]')
-        seSirve_v = request.POST.getlist('seSirve[]')
-    
+        producto_v = request.POST.getlist('producto[]')
+        seSirve_v = request.POST.getlist('seSirve[]') 
+        
+        ultimo_contacto = tblRepartidor.objects.order_by('-ID').first() 
+        if ultimo_contacto: 
+            ultimo_folio = ultimo_contacto.ID + 1 
+        else: 
+            ultimo_folio = 1 
+            
         solicitudes = []
         for i in range(len(cantidadSol_v)):
-            if cantidadSol_v[i]:
-                producto_instancia = tblProductos.objects.get(ID=int(producto_v[i]))
-
+            if cantidadSol_v[i]  and int(cantidadSol_v[i]) != 0:
                 solicitud = {
                     'id': id_v[i],
+                    'producto': producto_v[i],
                     'seSirve': seSirve_v[i],
-                    'producto': producto_instancia,
-                    'cantidadSer': float(cantidadSol_v[i])
+                    'cantidadSol': int(cantidadSol_v[i])
                 }
                 solicitudes.append(solicitud)
 
         for solicitud in solicitudes:
-            servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
-            servidos_save.SeSirve = solicitud['seSirve']
-            servidos_save.CantidadSolicitada = solicitud['cantidadSer']
-            servidos_save.IDProducto = solicitud['producto']
-            servidos_save.Porcentaje = porcentaje_v
+            ultimo_folio += 1
+            clave_int = ultimo_folio
+            formatoClave = 'S-{:06d}'.format(clave_int)         
+            tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
+            IDEstatus_id = estatus_v, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
+            FechaSol = fecha_v, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
 
-            servidos_save.save()
+        porcentaje_save = tblConfiguracion.objects.get(ID=1)
+        porcentaje_save.Porcentaje = porcentaje_v
+        porcentaje_save.save()
 
-        messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
+        messages.success(request, f'El Servido se ha actualizado exitosamente.')
         return redirect('proceso:T_Solicitud_Servidos')
+       
+# def actualizarOrdenServidos(request): 
+#     if request.method == 'POST': 
+#         porcentaje_v = int(request.POST.get('porcentaje')) 
+#         id_v = request.POST.getlist('id[]') 
+#         producto_v = request.POST.getlist('producto[]') 
+#         cantidadSol_v = request.POST.getlist('cantidadSol[]') 
+#         seSirve_v = request.POST.getlist('seSirve[]') 
+#         fecha_v = request.POST.getlist('fecha') 
+#         estatus_v = request.POST.getlist('estatus') 
+#         corral_v = request.POST.getlist('corral[]') 
+#         ultimo_contacto = tblRepartidor.objects.order_by('-ID').first() 
+        
+#         if ultimo_contacto: 
+#             ultimo_folio = ultimo_contacto.ID + 1 
+#         else: ultimo_folio = 1 
+#         solicitudes = [] 
+#         for i in range(len(cantidadSol_v)): 
+#             if cantidadSol_v[i] and int(cantidadSol_v[i]) != 0: 
+#                 producto_instancia = tblProductos.objects.get(ID=int(producto_v[i])) 
+#                 solicitud = { 
+#                     'id': id_v[i], 
+#                     'seSirve': seSirve_v[i], 
+#                     'corral': corral_v[i], 
+#                     'producto': producto_instancia, 
+#                     'productosave': producto_v, 
+#                     'productosave': producto_v, 
+#                     'cantidadSer': float(cantidadSol_v[i]) 
+#                 } 
+#             solicitudes.append(solicitud) 
+#             if solicitud['id'] == "" and producto_v == "": 
+#                 for solicitud in solicitudes: 
+#                     ultimo_folio += 1 
+#                     clave_int = ultimo_folio 
+#                     formatoClave = 'S-{:06d}'.format(clave_int) 
+#                     tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['corral'], IDProducto_id = solicitud['productosave'], 
+#                                                  IDTolva_id = 2, IDEstatus_id = estatus_v, CantidadSolicitada = solicitud['cantidadSer'], Cantidad1 = 0,
+#                                                  Cantidad2 = 0, FechaSol = fecha_v, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])
+#             else: 
+#                 for solicitud in solicitudes: 
+#                     servidos_save = tblRepartidor.objects.get(ID = solicitud['id']) 
+#                     servidos_save.SeSirve = solicitud['seSirve'] 
+#                     servidos_save.CantidadSolicitada = solicitud['cantidadSer'] 
+#                     servidos_save.IDProducto = solicitud['producto'] 
+#                     servidos_save.Porcentaje = porcentaje_v 
+#                     servidos_save.save() 
+#         messages.success(request, f'La orden de servido se ha actualizado exitosamente.') 
+#         return redirect('proceso:T_Solicitud_Servidos')
+    
+# def actualizarOrdenServidos(request):
+#     if request.method == 'POST':
+#         porcentaje_v = int(request.POST.get('porcentaje'))
+#         id_v = request.POST.getlist('id[]')
+#         producto_v = request.POST.getlist('producto[]')
+#         cantidadSol_v = request.POST.getlist('cantidadSol[]')
+#         seSirve_v = request.POST.getlist('seSirve[]')
+    
+#         solicitudes = []
+#         for i in range(len(cantidadSol_v)):
+#             if cantidadSol_v[i]:
+#                 producto_instancia = tblProductos.objects.get(ID=int(producto_v[i]))
+
+#                 solicitud = {
+#                     'id': id_v[i],
+#                     'seSirve': seSirve_v[i],
+#                     'producto': producto_instancia,
+#                     'cantidadSer': float(cantidadSol_v[i])
+#                 }
+#                 solicitudes.append(solicitud)
+
+#         for solicitud in solicitudes:
+#             servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
+#             servidos_save.SeSirve = solicitud['seSirve']
+#             servidos_save.CantidadSolicitada = solicitud['cantidadSer']
+#             servidos_save.IDProducto = solicitud['producto']
+#             servidos_save.Porcentaje = porcentaje_v
+
+#             servidos_save.save()
+
+#         messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
+#         return redirect('proceso:T_Solicitud_Servidos')
     
 def ordenVisible(request):
 
@@ -142,7 +235,8 @@ def ordenVisible(request):
 def actualizarCantidadServidosManual(request):
     if request.method == 'POST':
         id_v = request.POST.getlist('id[]')
-        cantidadSer_v = request.POST.getlist('cantidadSer[]')
+        cantidad1_v = request.POST.getlist('cantidad1[]')
+        cantidad2_v = request.POST.getlist('cantidad2[]')
         estatus_v = 10
         FechaDeHoy = timezone.localtime(timezone.now()).strftime('%Y-%m-%d %H:%M')
 
@@ -150,11 +244,12 @@ def actualizarCantidadServidosManual(request):
 
         
         solicitudes = []
-        for i in range(len(cantidadSer_v)):
-            if cantidadSer_v[i] and float(cantidadSer_v[i]) != 0:
+        for i in range(len(cantidad1_v)):
+            if cantidad1_v[i] and float(cantidad1_v[i]) != 0:
                 solicitud = {
                     'id': id_v[i],
-                    'cantidadSer': float(cantidadSer_v[i])
+                    'cantidad1': float(cantidad1_v[i]),
+                    'cantidad2': float(cantidad2_v[i])
                 }
                 solicitudes.append(solicitud)
 
@@ -162,12 +257,14 @@ def actualizarCantidadServidosManual(request):
             IDFilaTabla_v = solicitud['id']
             servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
             servidos_save.IDEstatus = estatus_instancia
-            servidos_save.CantidadServida = solicitud['cantidadSer']
-            servidos_save.FechaServida = FechaDeHoy
+            servidos_save.Cantidad1 = solicitud['cantidad1']
+            servidos_save.Cantidad2 = solicitud['cantidad2']
+            servidos_save.FechaServida1 = FechaDeHoy
+            servidos_save.FechaServida2 = FechaDeHoy
             servidos_save.save()
 
         messages.success(request, f'El Servido se ha actualizado exitosamente.')
-        return redirect('proceso:T_Servidos')
+        return redirect('proceso:T_Solicitud_Servidos')
 
 def actualizarCantidadFormuladoManual(request):
     if request.method == 'POST':
