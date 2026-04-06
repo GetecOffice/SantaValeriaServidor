@@ -198,15 +198,14 @@
                                                             Editar ✎
                                                         </button>
                                                     </form>
-                                                    <form action="{% url 'descargas:PDF_Orden_Servidos' %}"
-                                                        method="POST">
+                                                    <form action="{% url 'proceso:T_Orden_Servidos' %}" method="POST">
                                                         {% csrf_token %}
                                                         <input type="hidden" name="porcentaje"
                                                             value="{{ Dato.porcentaje }}">
                                                         <input type="hidden" name="fecha"
                                                             value="{{ Dato.FechaSol|date:'Y-m-d H:i' }}">
-                                                        <button class="accion-btn accion-right" type="submit">
-                                                            PDF 📄
+                                                        <button class="accion-btn accion-center" type="submit">
+                                                            👁 Ver
                                                         </button>
                                                     </form>
                                                 </div>
@@ -228,7 +227,8 @@
                         </div>
                         <div class="tab-pane active show fade mt-5" id="monthly" role="tabpanel">
                             <h4 style="justify-content: center; text-align: center;">ORDENES SERVIDAS</h4>
-
+                            <h6 style="justify-content: center; text-align: center; color: rgb(77, 76, 76);">Se
+                                mostraran las ultimas 5 ordenes</h6>
                             <div class="table-responsive">
                                 <table class="table table-responsive-md card-table transactions-table" id="miTabla">
                                     <thead>

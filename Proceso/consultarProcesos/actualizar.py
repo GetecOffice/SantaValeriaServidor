@@ -9,8 +9,61 @@ from django.db.models import Sum
 from django.db import transaction
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ACTUALIZAR DATOS PROCESOS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+from django.http import JsonResponse
 
+def agregarSolicitudServido(request):
+    if request.method == 'POST':
+        fecha_v = request.POST.get('fecha')
+        estatus_v = int(request.POST.get('estatus'))
+        porcentaje_v = int(request.POST.get('porcentaje'))
+
+        id_v = request.POST.getlist('id[]')
+        cantidadSol_v = request.POST.getlist('cantidadSol[]')
+        producto_v = request.POST.getlist('producto[]')
+        seSirve_v = request.POST.getlist('seSirve[]') 
+        
+        ultimo_contacto = tblRepartidor.objects.order_by('-ID').first() 
+        if ultimo_contacto: 
+            ultimo_folio = ultimo_contacto.ID + 1 
+        else: 
+            ultimo_folio = 1 
+            
+        solicitudes = []
+        for i in range(len(cantidadSol_v)):
+            if cantidadSol_v[i] and int(cantidadSol_v[i]) != 0:
+                solicitudes.append({
+                    'id': id_v[i],
+                    'producto': producto_v[i],
+                    'seSirve': seSirve_v[i],
+                    'cantidadSol': int(cantidadSol_v[i])
+                })
+
+        for solicitud in solicitudes:
+            ultimo_folio += 1
+            formatoClave = 'S-{:06d}'.format(ultimo_folio)
+
+            tblRepartidor.objects.create(
+                Folio=formatoClave,
+                IDCorral_id=solicitud['id'],
+                IDProducto_id=solicitud['producto'],
+                IDTolva_id=2,
+                IDEstatus_id=estatus_v,
+                CantidadSolicitada=solicitud['cantidadSol'],
+                Cantidad1=0,
+                Cantidad2=0,
+                FechaSol=fecha_v,
+                Porcentaje=porcentaje_v,
+                SeSirve=solicitud['seSirve']
+            )
+
+        porcentaje_save = tblConfiguracion.objects.get(ID=1)
+        porcentaje_save.Porcentaje = porcentaje_v
+        porcentaje_save.save()
+
+        return JsonResponse({
+            'status': 'ok',
+            'message': 'El Servido se ha actualizado exitosamente.'
+        })
 #   QUEDA INHABILITADO TEMPORALMENTE
 def actualizarServidosManual(request):
     id_v = request.POST['id']
@@ -83,51 +136,56 @@ def actualizarOrdenServidos(request):
         messages.success(request, f'La orden de servido se ha actualizado exitosamente.')
         return redirect('proceso:T_Solicitud_Servidos')
         
-def agregarSolicitudServido(request):
-    if request.method == 'POST':
-        # VARIABLES PARA CONFIGURACION
-        fecha_v = request.POST.get('fecha')
-        estatus_v = int(request.POST.get('estatus'))
-        porcentaje_v = int(request.POST.get('porcentaje'))
-        # LLENAR LA TABLA DE TBLREPARTIDOR
-        id_v = request.POST.getlist('id[]')
-        # folio_v = int(request.POST.get('folio'))
-        cantidadSol_v = request.POST.getlist('cantidadSol[]')
-        producto_v = request.POST.getlist('producto[]')
-        seSirve_v = request.POST.getlist('seSirve[]') 
+# def agregarSolicitudServido(request):
+#     if request.method == 'POST':
+#         # VARIABLES PARA CONFIGURACION
+#         fecha_v = request.POST.get('fecha')
+#         estatus_v = int(request.POST.get('estatus'))
+#         porcentaje_v = int(request.POST.get('porcentaje'))
+#         # LLENAR LA TABLA DE TBLREPARTIDOR
+#         id_v = request.POST.getlist('id[]')
+#         # folio_v = int(request.POST.get('folio'))
+#         cantidadSol_v = request.POST.getlist('cantidadSol[]')
+#         producto_v = request.POST.getlist('producto[]')
+#         seSirve_v = request.POST.getlist('seSirve[]') 
         
-        ultimo_contacto = tblRepartidor.objects.order_by('-ID').first() 
-        if ultimo_contacto: 
-            ultimo_folio = ultimo_contacto.ID + 1 
-        else: 
-            ultimo_folio = 1 
+#         ultimo_contacto = tblRepartidor.objects.order_by('-ID').first() 
+#         if ultimo_contacto: 
+#             ultimo_folio = ultimo_contacto.ID + 1 
+#         else: 
+#             ultimo_folio = 1 
             
-        solicitudes = []
-        for i in range(len(cantidadSol_v)):
-            if cantidadSol_v[i]  and int(cantidadSol_v[i]) != 0:
-                solicitud = {
-                    'id': id_v[i],
-                    'producto': producto_v[i],
-                    'seSirve': seSirve_v[i],
-                    'cantidadSol': int(cantidadSol_v[i])
-                }
-                solicitudes.append(solicitud)
+#         solicitudes = []
+#         for i in range(len(cantidadSol_v)):
+#             if cantidadSol_v[i]  and int(cantidadSol_v[i]) != 0:
+#                 solicitud = {
+#                     'id': id_v[i],
+#                     'producto': producto_v[i],
+#                     'seSirve': seSirve_v[i],
+#                     'cantidadSol': int(cantidadSol_v[i])
+#                 }
+#                 solicitudes.append(solicitud)
 
-        for solicitud in solicitudes:
-            ultimo_folio += 1
-            clave_int = ultimo_folio
-            formatoClave = 'S-{:06d}'.format(clave_int)         
-            tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
-            IDEstatus_id = estatus_v, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
-            FechaSol = fecha_v, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
+#         for solicitud in solicitudes:
+#             ultimo_folio += 1
+#             clave_int = ultimo_folio
+#             formatoClave = 'S-{:06d}'.format(clave_int)         
+#             tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
+#             IDEstatus_id = estatus_v, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
+#             FechaSol = fecha_v, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
 
-        porcentaje_save = tblConfiguracion.objects.get(ID=1)
-        porcentaje_save.Porcentaje = porcentaje_v
-        porcentaje_save.save()
+#         porcentaje_save = tblConfiguracion.objects.get(ID=1)
+#         porcentaje_save.Porcentaje = porcentaje_v
+#         porcentaje_save.save()
 
-        messages.success(request, f'El Servido se ha actualizado exitosamente.')
-        return redirect('proceso:T_Solicitud_Servidos')
+#         # messages.success(request, f'El Servido se ha actualizado exitosamente.')
+#         # return redirect('proceso:T_Solicitud_Servidos')
        
+#         return JsonResponse({
+#             'status': 'ok',
+#             # opcional si quieres redirigir
+#             # 'redirect_url': reverse('proceso:editarSolicitudServidos')
+#         })
 # def actualizarOrdenServidos(request): 
 #     if request.method == 'POST': 
 #         porcentaje_v = int(request.POST.get('porcentaje')) 

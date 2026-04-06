@@ -78,6 +78,7 @@ def agregarSolicitudServidos(request):
             'IDCorral_id',
             'IDCorral_id__Descripcion',
             'IDProducto_id__Descripcion',
+            'IDEstatus_id',
             'IDEstatus_id__Descripcion',
             'IDProducto_id',
             'IDEstatus_id',

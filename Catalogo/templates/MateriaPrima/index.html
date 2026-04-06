@@ -62,11 +62,11 @@
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 MERMA
                                             </th>
-                                            {% if perms.Aplicacion.change_tblmateriaprima or perms.Aplicacion.delete_tblmateriaprima %}
+                                           
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 ACCIÓN
                                             </th>
-                                            {% endif %}
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -102,9 +102,9 @@
                                                     {{Dato.Merma}}
                                                 </span>
                                             </td>
-                                             {% if perms.Aplicacion.change_tblmateriaprima or perms.Aplicacion.delete_tblmateriaprima %}
+                                            
                                             <td>
-                                                {% if perms.Aplicacion.change_tblmateriaprima %}
+                                                
                                                 <a style="display: inline-block;" href="Editar/{{Dato.ID}}">
                                                     <button class="edit-button">
                                                         <svg class="edit-svgIcon" viewBox="0 0 512 512">
@@ -114,9 +114,9 @@
                                                         </svg>
                                                     </button>
                                                 </a>
-                                                {% endif %}
+                                                
                                             </td>
-                                            {% endif %}
+                                            
                                         </tr>
                                         {% endfor %}
                                     </tbody>

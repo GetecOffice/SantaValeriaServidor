@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-from Proceso.consultarProcesos import actualizar, agregar, editar, mostrar, formulario, dispositivos
+from Proceso.consultarProcesos import actualizar, agregar, editar, mostrar, formulario, dispositivos, cancelar
 
 
 urlpatterns = [
@@ -53,4 +53,9 @@ urlpatterns = [
 
     path('ActualizarCancelarServidosVehiculos/', actualizar.actualizarCancelarTolva, name="A_Pedido_Tolva"),
     path('ActualizarCancelarFormuladoVehiculos/', actualizar.actualizarCancelarFormulado, name="A_Pedido_Formulado"),
+    
+    path('Cancelar_Corral_Servidos/', cancelar.cancelarServidos, name="C_Corral_Servidos"),
+    path('Cancelar_Orden_Servidos/', cancelar.cancelarOrdenServidos, name="C_Orden_Servidos"),
+    path('Elimnar_Orden_Servidos/', cancelar.eliminarOrdenServidos, name="EM_Orden_Servidos"),
+    
     ]

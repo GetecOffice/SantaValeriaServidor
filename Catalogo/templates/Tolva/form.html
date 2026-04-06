@@ -71,7 +71,7 @@
                                             <input type="text" autofocus name="marca" class="form-control input"
                                                 placeholder="Ingrese la marca" value="S/D">
 
-                                        </div> 
+                                        </div>
                                         <div class="col-sm-12 col-md-12 col-lg-6 col-xl-4 mb-3">
                                             <h6 class="h6-form">MODELO *</h6>
                                             <input type="text" autofocus name="modelo" class="form-control input"
@@ -83,15 +83,16 @@
 
                                     <input type="hidden" value="6" name="estatus">
                                     <input type="hidden" value="1" name="producto">
-                                    <div class="form-group my-4">
-                                        <button type="submit" class="btn btn-primary agregarBoton"
-                                            name="agregar">Guardar y
+
+                                    <div class="form-group grupo-botones">
+                                        <button type="submit" class="btn-guardar" name="agregar">💾 Guardar y
                                             agregar otro</button>
-                                        <button type="submit" class="btn btn-success salirBoton" name="salir">Guardar y
+                                        <button type="submit" class="btn-guardarOtro" name="salir">💾 Guardar y
                                             salir</button>
-                                        <a href="{% url 'catalogo:F_Tolva'%}">
-                                            <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                                        <a href="{% url 'catalogo:F_Tolva' %}" class="btn-cancelar">
+                                            ❌ Cancelar
                                         </a>
+
                                     </div>
                                 </div>
                             </form>

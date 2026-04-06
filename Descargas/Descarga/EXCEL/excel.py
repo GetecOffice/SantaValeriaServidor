@@ -10,14 +10,14 @@ def ExportarServidoCorralExcel(request):
     fechafinal = request.POST.get('fecha2')
 
     consulta_sql = """
-        SELECT  r.ID, r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-        r.CantidadSolicitada, r.CantidadServida, r.Fecha, r.FechaServida
+        SELECT r.ID, r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, 
+        r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1, r.FechaServida2
         FROM Aplicacion_tblrepartidor r
         LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
         LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
         LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
         WHERE r.IDEstatus_id IN (10,11)
-        AND DATE(r.FechaServida) BETWEEN %s AND %s
+        AND DATE(r.FechaServida2) BETWEEN %s AND %s
     """
 
     with connection.cursor() as cursor:
@@ -31,20 +31,24 @@ def ExportarServidoCorralExcel(request):
     headers = [
         "ID",
         "Folio",
+        "Porcentaje",
         "Corral",
         "Producto",
-        "Cantidad Solicitada",
-        "Cantidad Servida",
-        "Fecha",
-        "Fecha Servida"
+        "Cantidad Solicitada Kg",
+        "Cantidad Desayuno Kg",
+        "Cantidad Cena Kg",
+        "Fecha Solicitada",
+        "Fecha Servida Desayuno",
+        "Fecha Servida Cena"
     ]
 
     ws.append(headers)
 
     for row in TServidos:
 
-        fecha = row[6]
-        fecha_servida = row[7]
+        fecha = row[7]
+        fecha_servida1 = row[8]
+        fecha_servida2 = row[9]
 
         ws.append([
             row[0],
@@ -53,13 +57,17 @@ def ExportarServidoCorralExcel(request):
             row[3],
             row[4],
             row[5],
+            row[6],
+            row[7],
             fecha,
-            fecha_servida,
+            fecha_servida1,
+            fecha_servida2
         ])
 
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
-        row[6].number_format = 'DD/MM/YYYY HH:MM'
-        row[7].number_format = 'DD/MM/YYYY HH:MM'
+        row[8].number_format = 'DD/MM/YYYY HH:MM'
+        row[9].number_format = 'DD/MM/YYYY HH:MM'
+        row[10].number_format = 'DD/MM/YYYY HH:MM'
 
     for column in ws.columns:
         max_length = 0

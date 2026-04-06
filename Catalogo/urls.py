@@ -35,6 +35,7 @@ urlpatterns = [
    path('Materias_Primas/Editar/<ID>', editar.editarMateriaPrima, name='E_MateriaPrima'),
    path('Productos/Editar/<ID>', editar.editarProducto, name='E_Producto'),
    path('Productos/Agregar/Editar/<ID>',editar.editarProductoReceta, name='ER_Producto'),
+   path('Guardar_Receta/Editar/<ID>',editar.editarProductoReceta, name='ER_Producto'),
    path('Corrales/Editar/<ID>', editar.editarCorral, name='E_Corral'),
    path('Tolvas/Editar/<ID>', editar.editarTolva, name='E_Tolva'),   
 

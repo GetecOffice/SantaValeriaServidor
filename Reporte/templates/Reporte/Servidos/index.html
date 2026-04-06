@@ -9,8 +9,8 @@
 {% block generar %}
 <li class="nav-item ocultar">
     <button type="button" class="btn btn-primary d-sm-inline-block d-none" data-bs-toggle="modal"
-            data-bs-target="#exampleModal"> GENERAR REPORTE <i class="las la-signal ms-3 scale5"></i>
-    </button>    
+        data-bs-target="#exampleModal"> GENERAR REPORTE <i class="las la-signal ms-3 scale5"></i>
+    </button>
 </li>
 {% endblock %}
 
@@ -32,24 +32,27 @@
                             </div>
 
                             <!-- BOTÓN -->
-                             
+
                             <div class="col-6 d-flex justify-content-md-end justify-content-start mt-3 mt-md-0">
-                               {% if Fecha %}
+                                {% if Fecha %}
                                 <div class="btn-group ml-4" role="group" aria-label="Basic example">
-                                    <form action="{% url 'descargas:PDF_Reportes_Mov_Servidos' %}" method="POST">{% csrf_token %}
+                                    <form action="{% url 'descargas:PDF_Reportes_Mov_Servidos' %}" method="POST">
+                                        {% csrf_token %}
                                         <input type="hidden" value="{{Fecha}}" name="fecha1">
                                         <input type="hidden" value="{{Fecha2}}" name="fecha2">
                                         <input type="hidden" value="0" name="reporte-liquidacion-servidos">
-                                        <button type="submit" class="btn btn-danger">DESCARGAR PDF</button>
-                                    </form>                                       
+                                        <button type="submit" class="pdf">📄 Exportar PDF</button>
+                                    </form>
                                     <!-- <button type="button" class="btn btn-secondary">Middle</button> -->
-                                    <form action="{% url 'descargas:exportar_servido_corral' %}" method="POST">{% csrf_token %}
+                                    <form action="{% url 'descargas:exportar_servido_corral' %}" method="POST">
+                                        {% csrf_token %}
                                         <input type="hidden" value="{{Fecha}}" name="fecha1">
                                         <input type="hidden" value="{{Fecha2}}" name="fecha2">
                                         <input type="hidden" value="0" name="reporte-liquidacion-servidos">
-                                        <button type="submit" class="btn btn-success">DESCARGAR EXCEL</button>
-                                    </form>                                     
-                                    
+                                        <button type="submit" class="excel">📗 Exportar Excel
+                                        </button>
+                                    </form>
+
                                 </div>
                                 {% endif %}
                             </div>
@@ -66,22 +69,31 @@
                                                 CLAVE
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
+                                                PORCENTAJE
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
                                                 CORRAL
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 FORMULA
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                CANT SOL.
+                                                CANT SOLICITADA.
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                CANT SER.
+                                                CANT DESAYUNO.
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                FECHA SOL.
+                                                CANT CENA.
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                FECHA SER.
+                                                FECHA SOLICITADA.
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                FECHA SER DES.
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                FECHA SER CENA.
                                             </th>
 
 
@@ -97,7 +109,7 @@
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.1}}
+                                                    {{ Dato.1}} %
                                                 </span>
                                             </td>
                                             <td>
@@ -107,22 +119,37 @@
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.3 }} 
+                                                    {{ Dato.3 }}
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.4 }} 
+                                                    {{ Dato.4 }} Kg
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.5 }}
+                                                    {{ Dato.5 }} Kg
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.6 }}
+                                                    {{ Dato.6 }} Kg
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.7 }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.8 }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.9 }}
                                                 </span>
                                             </td>
                                         </tr>

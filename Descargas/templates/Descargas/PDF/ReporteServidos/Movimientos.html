@@ -73,7 +73,13 @@
         width: 25%;
     }
 
-    @page { size: letter; margin-left: 0.5in; margin-right: 0.5in; margin-top: 0.7in; margin-bottom: 0.3in; }
+    @page {
+        size: A4 landscape;
+        margin-left: 0.5in;
+        margin-right: 0.5in;
+        margin-top: 0.7in;
+        margin-bottom: 0.3in;
+    }
 </style>
 
 <body>
@@ -108,7 +114,7 @@
                     </th>
                     <th colspan="4" style="padding-top: 25px; padding: 0;">
                         <h1 class="title" style="font-size: 14px; text-align: right; margin: 0; padding:0">
-                            Hermosillo, 
+                            Hermosillo,
                         </h1>
 
                         <h1 class="title"
@@ -132,34 +138,54 @@
                 <thead>
                     <tr style="font-size: 2rem;">
 
+                        <!-- <th class="th columna-contenido" colspan="2">ID</th> -->
+                        <th class="th columna-contenido" colspan="2">Folio</th>
+                        <th class="th columna-contenido" colspan="2">Porcentaje</th>
                         <th class="th columna-contenido" colspan="2">Corral</th>
                         <th class="th columna-contenido" colspan="2">Producto</th>
-                        <th class="th columna-contenido" colspan="1">Cantidad Solicitada</th>
-                        <th class="th columna-contenido" colspan="1">Cantidad Servida</th>
-                        <th class="th columna-contenido" colspan="2">Fecha Solicitada</th>
-                        <th class="th columna-contenido" colspan="2">Fecha Servida</th>
+                        <th class="th columna-contenido" colspan="1">Cant. Sol.</th>
+                        <th class="th columna-contenido" colspan="1">Cant. Des.</th>
+                        <th class="th columna-contenido" colspan="1">Cant. Cena</th>
+                        <th class="th columna-contenido" colspan="2">Fecha Sol.</th>
+                        <th class="th columna-contenido" colspan="2">Fecha Des.</th>
+                        <th class="th columna-contenido" colspan="2">Fecha Cena</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for reporte in reportes %}
                     <tr>
+                        <!-- <td class="td columna-base" colspan="2">
+                            {{ reporte.0 }}
+                        </td> -->
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.1 }}
+                        </td>
                         <td class="td columna-base" colspan="2">
                             {{ reporte.2 }}
                         </td>
                         <td class="td columna-base" colspan="2">
                             {{ reporte.3 }}
                         </td>
-                        <td class="td columna-base" colspan="1">
-                            {{ reporte.4 }} {{ reporte.8 }}
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.4 }}
                         </td>
                         <td class="td columna-base" colspan="1">
-                            {{ reporte.5 }} {{ reporte.8 }}
+                            {{ reporte.5 }} Kg
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.6 }} Kg
+                        </td>
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.7 }} Kg
                         </td>
                         <td class="td columna-base" colspan="2">
-                            {{ reporte.6 }}
+                            {{ reporte.8 }}
                         </td>
                         <td class="td columna-base" colspan="2">
-                            {{ reporte.7 }}
+                            {{ reporte.9 }}
+                        </td>
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.10 }}
                         </td>
                     </tr>
                     {% endfor %}

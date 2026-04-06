@@ -33,6 +33,7 @@ def TablaSolicitudServido(request):
         )
         .order_by('-FechaSol')
     )
+
     TFServidos = tblRepartidor.objects.filter(IDEstatus_id=13).annotate(fecha=TruncDate('FechaSol')).values('FechaSol').first()
     THServidos = (
         tblRepartidor.objects
@@ -49,7 +50,7 @@ def TablaSolicitudServido(request):
             estatus=Max('IDEstatus_id__Descripcion'),
             idestatus=Max('IDEstatus_id')
         )
-        .order_by('-FechaSol')
+        .order_by('-FechaSol')[:5]
     )
     return render(request, 'SolicitudServido/index.html',{'THServidos': THServidos, 'TGServidos':TGServidos, 'ServiciosWeb':ServiciosWeb, 'TFServidos':TFServidos})
 

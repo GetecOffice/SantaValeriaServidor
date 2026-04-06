@@ -12,7 +12,7 @@ from Aplicacion.models import *
 from django.http import HttpResponse
 from django.db.models import Sum
 # IMPORT PARA CORREOS ELECTRONICOS
-
+from django.db import connection
 from django.db.models import F, FloatField, ExpressionWrapper
 #!<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -390,14 +390,14 @@ def reporteMovimientoServidos(request):
 
 
     consulta_sql = """
-        SELECT  r.ID, r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-        r.CantidadSolicitada, r.CantidadServida, r.Fecha, r.FechaServida
+        SELECT r.ID, r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, 
+        r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1, r.FechaServida2
         FROM Aplicacion_tblrepartidor r
         LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
         LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
         LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
         WHERE r.IDEstatus_id IN (10,11)
-        AND DATE(r.FechaServida) BETWEEN %s AND %s
+        AND DATE(r.FechaServida2) BETWEEN %s AND %s
     """
 
     with connection.cursor() as cursor:

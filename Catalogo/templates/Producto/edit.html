@@ -80,11 +80,15 @@
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="form-group my-4">
-                                        <button type="submit" class="btn btn-success">Actualizar</button>
-                                        <a href="{% url 'catalogo:T_Producto'%}" class="btn btn-danger">Cancelar</a>
+                                    <div class="form-group grupo-botones">
+                                        <button type="submit" class="btn-editar" name="agregar" id="agregarBoton">
+                                            ✎ Actualizar
+                                        </button>
+                                        <a href="{% url 'catalogo:T_Producto' %}" class="btn-cancelar">
+                                            ❌ Cancelar
+                                        </a>
                                     </div>
+                                 
                                 </div>
                             </form>
                         </div>

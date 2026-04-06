@@ -15,8 +15,8 @@ def reporteServidosMovimientos(request):
         Fecha = request.POST.get('fecha1')
         Fecha2 = request.POST.get('fecha2')
         consulta_sql = """  
-            SELECT r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1
+            SELECT r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, 
+            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1, r.FechaServida2
             FROM Aplicacion_tblrepartidor r
             LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
             LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
@@ -32,8 +32,8 @@ def reporteServidosMovimientos(request):
             
     else:
         consulta_sql = """  
-            SELECT r.Folio, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1
+            SELECT r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, 
+            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1, r.FechaServida2
             FROM Aplicacion_tblrepartidor r
             LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
             LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID

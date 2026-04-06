@@ -59,12 +59,15 @@
                                                 class="form-control" placeholder="Ingrese la cantidad" required>
                                         </div>
                                     </div>
-                                    <div class="form-group ml-1 mr-1">
-                                        <button type="submit" class="btn btn-success buttonEnviar celular"
-                                            id="submit-btn">ACTUALIZAR</button>
-                                        <a href="{% url 'catalogo:AR_Producto' ID=TRecetas.IDProductos_id %}"
-                                            class="btn btn-danger buttonCancelar celular" role="button">CANCELAR</a>
-                                    </div>
+                                    <div class="form-group grupo-botones">
+                                        <button type="submit" class="btn-editar" name="agregar" id="agregarBoton">
+                                            ✎ Actualizar
+                                        </button>
+                                        <a href="{% url 'catalogo:AR_Producto' ID=TRecetas.IDProductos_id %}" class="btn-cancelar">
+                                            ❌ Cancelar
+                                        </a>
+                                    </div>                                    
+                                    
                                 </div>
                             </form>
                         </div>

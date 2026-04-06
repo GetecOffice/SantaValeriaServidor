@@ -18,7 +18,7 @@
                                     <i class="bi bi-arrow-left-circle text-black fs-28"></i>
                                 </a>
                                 <b>EDITAR OPERADOR #{{TEOperador.ID}}</b>
-                                
+
                             </h4>
 
                         </div>
@@ -53,10 +53,15 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-success">Actualizar</button>
-                                        <a href="{% url 'catalogo:T_Operador'%}" class="btn btn-danger">Cancelar</a>
+                                    <div class="form-group grupo-botones">
+                                        <button type="submit" class="btn-editar" name="agregar" id="agregarBoton">
+                                            ✎ Actualizar
+                                        </button>
+                                        <a href="{% url 'catalogo:T_Operador' %}" class="btn-cancelar">
+                                            ❌ Cancelar
+                                        </a>
                                     </div>
+
                                 </div>
                             </form>
                         </div>

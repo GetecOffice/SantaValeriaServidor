@@ -55,7 +55,8 @@
                                         <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4 mb-3">
                                             <h6 class="h6-form">PRECIO U. *</h6>
                                             <input type="number" step="0.01" name="precio" class="form-control input"
-                                                placeholder="Ingrese el precio unitario (obligatorio)" value="0" required>
+                                                placeholder="Ingrese el precio unitario (obligatorio)" value="0"
+                                                required>
                                         </div>
                                         <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 mb-3">
                                             <h6 class="h6-form">MERMA *</h6>
@@ -82,15 +83,15 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group my-4">
-                                        <button type="submit" class="btn btn-primary agregarBoton"
-                                            name="agregar">Guardar y
+                                    <div class="form-group grupo-botones">
+                                        <button type="submit" class="btn-guardar" name="agregar">💾 Guardar y
                                             agregar otro</button>
-                                        <button type="submit" class="btn btn-success salirBoton" name="salir">Guardar y
+                                        <button type="submit" class="btn-guardarOtro" name="salir">💾 Guardar y
                                             salir</button>
-                                        <a href="{% url 'catalogo:T_MateriaPrima'%}">
-                                            <button type="button" class="btn btn-danger cancelarBoton">Cancelar</button>
+                                        <a href="{% url 'catalogo:T_MateriaPrima' %}" class="btn-cancelar">
+                                            ❌ Cancelar
                                         </a>
+
                                     </div>
                                 </div>
                             </form>

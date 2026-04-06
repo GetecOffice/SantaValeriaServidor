@@ -15,6 +15,7 @@
     <!-- <link rel="stylesheet" href="{% static 'vendor/nouislider/nouislider.min.css' %}"> -->
     <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/button.css' %}" rel="stylesheet">
     <link href="{% static 'css/buttons.css' %}" rel="stylesheet">
     <link href="{% static 'ruta/select2/select2.min.css' %}" rel="stylesheet" />
     <!-- <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet"> -->
@@ -119,6 +120,8 @@
             box-sizing: border-box;
             /* Asegura que padding se incluya en el height */
         }
+
+
     </style>
 
 
@@ -168,29 +171,9 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                            <!-- <li class="nav-item">
-                                <div class="input-group search-area">
-                                    <input type="text" class="form-control" placeholder="Search here...">
-                                    <span class="input-group-text"><a href="javascript:void(0)"><i
-                                                class="flaticon-381-search-2"></i></a></span>
-                                </div>
-                            </li>
-                           <li class="nav-item">
-                                <div class="dropdown">
-                                    <button class="btn btn-primary d-sm-inline-block d-none dropdown-toggle"
-                                        type="button" data-bs-toggle="dropdown" aria-expanded="false" disabled>
-                                        <i class="las la-download scale5 me-3"></i>Descargar reporte</a>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item text-black" href="#">Archivo Excel</a>
-                                        </li>
-                                        <li><a class="dropdown-item text-black" href="#">Archivo
-                                                PDF</a></li>
-                                    </ul>
-                                </div>
-                            </li> -->
+
                             {% block generar %}
-                           
+
                             {% endblock %}
                         </ul>
 
@@ -254,43 +237,8 @@
                 </ul>
             </div>
         </div>
-        <!--**********************************
-            Sidebar end
-        ***********************************-->
-        <!-- {% if ServiciosWeb.EstadoPago == False and ServiciosWeb.Notificacion == False %}
-        <div class="toast alerta" role="alert" aria-live="assertive" aria-atomic="true"
-            style="position: fixed; bottom: 5px; right: 5px; z-index: 9999; background-color: aliceblue;">
-            <div class="toast-header">
-                <div class="izquierda">
-                    <strong class="mr-auto">SISTEMA TEMPORAL</strong>
-                </div>
-                <div class="derecha">
-                    <small class="text-muted">Pendiente</small>
-                    <button type="button" class="ml-2 mb-1 close close-toast" data-dismiss="toast"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-            <div class="toast-body">
-                <p style="text-align: justify;"> Hola estimado usuario, para poder seguir utilizando el servicio
-                    proporcionado, debe efectuar el pago
-                    correspondiente </p>
-            </div>
-        </div>
-        <script>
-            $(document).ready(function () {
-                $('.toast').toast('show');
-            });
-            var closeButton = document.querySelector('.toast .close');
-            closeButton.addEventListener('click', function () {
-                var toast = document.querySelector('.toast');
-                $(toast).toast('hide');
-            });
-        </script>
-        {% endif %}
-   -->
-        {% if ServiciosWeb.Servicio == True %}                 
+
+        {% if ServiciosWeb.Servicio == True %}
         {% block body %}
 
         {% endblock %}
@@ -298,8 +246,8 @@
         {% else %}
         <script>
             window.location.href = "{% url 'aplicacion:SinServicio' %}";
-            
-        </script>       
+
+        </script>
         {% endif %}
         <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
             {% if messages %}
