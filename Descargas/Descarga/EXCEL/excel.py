@@ -10,13 +10,14 @@ def ExportarServidoCorralExcel(request):
     fechafinal = request.POST.get('fecha2')
 
     consulta_sql = """
-        SELECT r.ID, r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-        r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1, r.FechaServida2
-        FROM Aplicacion_tblrepartidor r
-        LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
-        LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
-        LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
-        WHERE r.IDEstatus_id IN (10,11)
+            SELECT  r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, r.CantidadAnimales, 
+            r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, (r.Cantidad1 + r.Cantidad2) AS TotalCantidad,
+            ROUND((r.Cantidad1 + r.Cantidad2) / NULLIF(r.CantidadAnimales, 0), 2) AS PromedioPorAnimal, r.FechaSol, r.FechaServida1, r.FechaServida2
+            FROM Aplicacion_tblrepartidor r
+            LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
+            LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID
+            LEFT JOIN Aplicacion_tblestatus e ON r.IDEstatus_id = e.ID
+            WHERE r.IDEstatus_id IN (10,11)
         AND DATE(r.FechaServida2) BETWEEN %s AND %s
     """
 
@@ -29,14 +30,16 @@ def ExportarServidoCorralExcel(request):
     ws.title = "Servido Corral"
 
     headers = [
-        "ID",
         "Folio",
         "Porcentaje",
         "Corral",
         "Producto",
-        "Cantidad Solicitada Kg",
-        "Cantidad Desayuno Kg",
-        "Cantidad Cena Kg",
+        "Cabezas por corral",
+        "Kilos solicitados",
+        "Servido mañana",
+        "Servido tarde",
+        "Total servido",
+        "Kilos por cabeza",
         "Fecha Solicitada",
         "Fecha Servida Desayuno",
         "Fecha Servida Cena"
@@ -46,9 +49,9 @@ def ExportarServidoCorralExcel(request):
 
     for row in TServidos:
 
-        fecha = row[7]
-        fecha_servida1 = row[8]
-        fecha_servida2 = row[9]
+        fecha = row[10]
+        fecha_servida1 = row[11]
+        fecha_servida2 = row[12]
 
         ws.append([
             row[0],
@@ -59,15 +62,17 @@ def ExportarServidoCorralExcel(request):
             row[5],
             row[6],
             row[7],
+            row[8],
+            row[9],
             fecha,
             fecha_servida1,
             fecha_servida2
         ])
 
     for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
-        row[8].number_format = 'DD/MM/YYYY HH:MM'
-        row[9].number_format = 'DD/MM/YYYY HH:MM'
         row[10].number_format = 'DD/MM/YYYY HH:MM'
+        row[11].number_format = 'DD/MM/YYYY HH:MM'
+        row[12].number_format = 'DD/MM/YYYY HH:MM'
 
     for column in ws.columns:
         max_length = 0

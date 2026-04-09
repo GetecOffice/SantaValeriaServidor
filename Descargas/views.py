@@ -390,8 +390,9 @@ def reporteMovimientoServidos(request):
 
 
     consulta_sql = """
-        SELECT r.ID, r.Folio, r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, 
-        r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, r.FechaSol, r.FechaServida1, r.FechaServida2
+        SELECT  r.Porcentaje, c.Descripcion AS Corral, p.Descripcion AS Producto, r.CantidadAnimales, 
+        r.CantidadSolicitada, r.Cantidad1, r.Cantidad2, (r.Cantidad1 + r.Cantidad2) AS TotalCantidad,
+        ROUND((r.Cantidad1 + r.Cantidad2) / NULLIF(r.CantidadAnimales, 0), 2) AS PromedioPorAnimal, r.FechaSol, r.FechaServida1, r.FechaServida2
         FROM Aplicacion_tblrepartidor r
         LEFT JOIN Aplicacion_tblcorrales c ON r.IDCorral_id = c.ID
         LEFT JOIN Aplicacion_tblproductos p ON r.IDProducto_id = p.ID

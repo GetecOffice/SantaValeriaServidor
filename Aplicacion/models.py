@@ -77,6 +77,7 @@ class tblRepartidor(models.Model):
     IDEstatus = models.ForeignKey(tblEstatus, on_delete=models.DO_NOTHING, null=True)
     IDTolva = models.ForeignKey(tblTolva, on_delete=models.DO_NOTHING, null=True)
     SeSirve = models.CharField(max_length=15, null=True)
+    CantidadAnimales = models.IntegerField(null=True)
     CantidadSolicitada = models.IntegerField(null=True)
     Cantidad1 = models.IntegerField(null=True)
     Cantidad2 = models.IntegerField(null=True)

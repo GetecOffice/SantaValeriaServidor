@@ -37,7 +37,7 @@ def TablaSolicitudServido(request):
     TFServidos = tblRepartidor.objects.filter(IDEstatus_id=13).annotate(fecha=TruncDate('FechaSol')).values('FechaSol').first()
     THServidos = (
         tblRepartidor.objects
-        .filter( Q(IDEstatus_id=10)| Q(IDEstatus_id=13))
+        .filter( Q(IDEstatus_id=10))
         .annotate(fecha=TruncDate('FechaSol'))
         .values('FechaSol')
         .annotate(
@@ -91,6 +91,7 @@ def TablaOrdenesServido(request):
             'IDProducto_id',
             'IDEstatus_id',
             'CantidadSolicitada',
+            'CantidadAnimales',
             'calcCantidad1',
             'calcCantidad2',  
             'calcSuma',                 

@@ -19,6 +19,7 @@ def agregarSolicitudServido(request):
 
         id_v = request.POST.getlist('id[]')
         cantidadSol_v = request.POST.getlist('cantidadSol[]')
+        cantidadAnimales_v = request.POST.getlist('cantidadAnimales[]')
         producto_v = request.POST.getlist('producto[]')
         seSirve_v = request.POST.getlist('seSirve[]') 
         
@@ -35,7 +36,8 @@ def agregarSolicitudServido(request):
                     'id': id_v[i],
                     'producto': producto_v[i],
                     'seSirve': seSirve_v[i],
-                    'cantidadSol': int(cantidadSol_v[i])
+                    'cantidadSol': int(cantidadSol_v[i]),
+                    'cantidadAnimales': int(cantidadAnimales_v[i])
                 })
 
         for solicitud in solicitudes:
@@ -49,6 +51,7 @@ def agregarSolicitudServido(request):
                 IDTolva_id=2,
                 IDEstatus_id=estatus_v,
                 CantidadSolicitada=solicitud['cantidadSol'],
+                CantidadAnimales=solicitud['cantidadAnimales'],
                 Cantidad1=0,
                 Cantidad2=0,
                 FechaSol=fecha_v,
@@ -109,6 +112,7 @@ def actualizarOrdenServidos(request):
         id_v = request.POST.getlist('id[]')
         producto_v = request.POST.getlist('producto[]')
         cantidadSol_v = request.POST.getlist('cantidadSol[]')
+        cantidadAnimales_v = request.POST.getlist('cantidadAnimales[]')
         seSirve_v = request.POST.getlist('seSirve[]')
     
         solicitudes = []
@@ -120,7 +124,8 @@ def actualizarOrdenServidos(request):
                     'id': id_v[i],
                     'seSirve': seSirve_v[i],
                     'producto': producto_instancia,
-                    'cantidadSer': float(cantidadSol_v[i])
+                    'cantidadSer': float(cantidadSol_v[i]),
+                    'cantidadAnimales': float(cantidadAnimales_v[i])
                 }
                 solicitudes.append(solicitud)
 
@@ -128,6 +133,7 @@ def actualizarOrdenServidos(request):
             servidos_save = tblRepartidor.objects.get(ID = solicitud['id'])
             servidos_save.SeSirve = solicitud['seSirve']
             servidos_save.CantidadSolicitada = solicitud['cantidadSer']
+            servidos_save.CantidadAnimales = solicitud['cantidadAnimales']
             servidos_save.IDProducto = solicitud['producto']
             servidos_save.Porcentaje = porcentaje_v
 

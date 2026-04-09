@@ -139,13 +139,15 @@
                     <tr style="font-size: 2rem;">
 
                         <!-- <th class="th columna-contenido" colspan="2">ID</th> -->
-                        <th class="th columna-contenido" colspan="2">Folio</th>
-                        <th class="th columna-contenido" colspan="2">Porcentaje</th>
-                        <th class="th columna-contenido" colspan="2">Corral</th>
+                        <th class="th columna-contenido" colspan="1">Porc. % </th>
+                        <th class="th columna-contenido" colspan="1">Corral</th>
                         <th class="th columna-contenido" colspan="2">Producto</th>
-                        <th class="th columna-contenido" colspan="1">Cant. Sol.</th>
-                        <th class="th columna-contenido" colspan="1">Cant. Des.</th>
-                        <th class="th columna-contenido" colspan="1">Cant. Cena</th>
+                        <th class="th columna-contenido" colspan="1">Cab. Corral</th>
+                        <th class="th columna-contenido" colspan="1">Kilos. Sol.</th>
+                        <th class="th columna-contenido" colspan="1">Serv. Des.</th>
+                        <th class="th columna-contenido" colspan="1">Serv. Tarde</th>
+                        <th class="th columna-contenido" colspan="1">Total Serv.</th>
+                        <th class="th columna-contenido" colspan="1">Kilos Cab.</th>
                         <th class="th columna-contenido" colspan="2">Fecha Sol.</th>
                         <th class="th columna-contenido" colspan="2">Fecha Des.</th>
                         <th class="th columna-contenido" colspan="2">Fecha Cena</th>
@@ -154,20 +156,20 @@
                 <tbody>
                     {% for reporte in reportes %}
                     <tr>
-                        <!-- <td class="td columna-base" colspan="2">
-                            {{ reporte.0 }}
-                        </td> -->
-                        <td class="td columna-base" colspan="2">
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.0 }} %
+                        </td>
+                        <td class="td columna-base" colspan="1">
                             {{ reporte.1 }}
                         </td>
                         <td class="td columna-base" colspan="2">
                             {{ reporte.2 }}
                         </td>
-                        <td class="td columna-base" colspan="2">
+                        <td class="td columna-base" colspan="1">
                             {{ reporte.3 }}
                         </td>
-                        <td class="td columna-base" colspan="2">
-                            {{ reporte.4 }}
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.4 }} Kg
                         </td>
                         <td class="td columna-base" colspan="1">
                             {{ reporte.5 }} Kg
@@ -178,15 +180,19 @@
                         <td class="td columna-base" colspan="1">
                             {{ reporte.7 }} Kg
                         </td>
-                        <td class="td columna-base" colspan="2">
-                            {{ reporte.8 }}
+                        <td class="td columna-base" colspan="1">
+                            {{ reporte.8 }} Kg
                         </td>
                         <td class="td columna-base" colspan="2">
-                            {{ reporte.9 }}
+                            {{ reporte.9 }} 
                         </td>
                         <td class="td columna-base" colspan="2">
                             {{ reporte.10 }}
                         </td>
+                        <td class="td columna-base" colspan="2">
+                            {{ reporte.11 }}
+                        </td>
+
                     </tr>
                     {% endfor %}
                 </tbody>

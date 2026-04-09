@@ -6,6 +6,7 @@ from Aplicacion.forms import *
 from Aplicacion.models import *
 from datetime import datetime, timedelta
 from Aplicacion.views import servicioActivo
+
 def FormularioSolicitudServido(request):
     ServiciosWeb = servicioActivo() 
     ultimo_contacto = tblRepartidor.objects.order_by('-ID').first()
@@ -48,6 +49,7 @@ def FormularioReplicarServido(request):
             'IDProducto_id',
             'IDEstatus_id',
             'CantidadSolicitada',
+            'CantidadAnimales',
             'SeSirve',
             'FechaSol',
             'FechaServida1'

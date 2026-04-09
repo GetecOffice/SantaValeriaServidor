@@ -18,6 +18,7 @@ def guardarSolicitudServido(request):
         id_v = request.POST.getlist('id[]')
         folio_v = int(request.POST.get('folio'))
         cantidadSol_v = request.POST.getlist('cantidadSol[]')
+        cantidadAnimales_v = request.POST.getlist('cantidadAnimales[]')
         producto_v = request.POST.getlist('producto[]')
         seSirve_v = request.POST.getlist('seSirve[]')
 
@@ -30,7 +31,8 @@ def guardarSolicitudServido(request):
                     'id': id_v[i],
                     'producto': producto_v[i],
                     'seSirve': seSirve_v[i],
-                    'cantidadSol': int(cantidadSol_v[i])
+                    'cantidadSol': int(cantidadSol_v[i]),
+                    'cantidadAnimales': int(cantidadAnimales_v[i])
                 }
                 solicitudes.append(solicitud)
 
@@ -40,7 +42,7 @@ def guardarSolicitudServido(request):
             formatoClave = 'S-{:06d}'.format(clave_int)         
             tblRepartidor.objects.create(Folio = formatoClave, IDCorral_id =solicitud['id'], IDProducto_id = solicitud['producto'], IDTolva_id = 2,
             IDEstatus_id = 3, CantidadSolicitada = solicitud['cantidadSol'], Cantidad1 = 0,Cantidad2 = 0, 
-            FechaSol = FechaDeHoy, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'])             
+            FechaSol = FechaDeHoy, Porcentaje = porcentaje_v, SeSirve = solicitud['seSirve'], CantidadAnimales =  solicitud['cantidadAnimales'])             
 
         porcentaje_save = tblConfiguracion.objects.get(ID=1)
         porcentaje_save.Porcentaje = porcentaje_v

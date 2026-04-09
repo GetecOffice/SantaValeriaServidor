@@ -65,9 +65,7 @@
                                 <table class="table table-responsive-md card-table transactions-table">
                                     <thead>
                                         <tr>
-                                            <th class="text-black fs-16 font-w600 th-responsive">
-                                                CLAVE
-                                            </th>
+
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 PORCENTAJE
                                             </th>
@@ -78,13 +76,22 @@
                                                 FORMULA
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                CANT SOLICITADA.
+                                                CABEZAS POR CORRAL
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                CANT DESAYUNO.
+                                                KILOS SOLICITADOS
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
-                                                CANT CENA.
+                                                SERVIDA MAÑANA
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                SERVIDA TARDE
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                TOTAL SERVIDO
+                                            </th>
+                                            <th class="text-black fs-16 font-w600 th-responsive">
+                                                KILOS POR CABEZA
                                             </th>
                                             <th class="text-black fs-16 font-w600 th-responsive">
                                                 FECHA SOLICITADA.
@@ -104,12 +111,12 @@
                                         <tr>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{Dato.0}}
+                                                    {{Dato.0}} %
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.1}} %
+                                                    {{ Dato.1}}
                                                 </span>
                                             </td>
                                             <td>
@@ -139,17 +146,27 @@
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.7 }}
+                                                    {{ Dato.7 }} Kg
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
-                                                    {{ Dato.8 }}
+                                                    {{ Dato.8 }} Kg
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="fs-16 text-black font-w400">
                                                     {{ Dato.9 }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.10 }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="fs-16 text-black font-w400">
+                                                    {{ Dato.11 }}
                                                 </span>
                                             </td>
                                         </tr>

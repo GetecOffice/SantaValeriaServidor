@@ -31,6 +31,7 @@ def editarSolicitudServidos(request):
             'IDEstatus_id__Descripcion',
             'IDProducto_id',
             'IDEstatus_id',
+            'CantidadAnimales',
             'CantidadSolicitada',
             'SeSirve',
             'FechaSol',
@@ -83,6 +84,7 @@ def agregarSolicitudServidos(request):
             'IDProducto_id',
             'IDEstatus_id',
             'CantidadSolicitada',
+            'CantidadAnimales',
             'SeSirve',
             'FechaSol',
             'FechaServida1'

@@ -55,6 +55,9 @@
                                                     CANTIDAD SOLICITADA (KG)
                                                 </th>
                                                 <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
+                                                    CANTIDAD ANIMALES
+                                                </th>                                                
+                                                <th class="text-black fs-16 font-w600 th-responsive" colspan="3">
                                                     ESTATUS
                                                 </th>
                                             </tr>
@@ -85,6 +88,11 @@
                                                         value="{{Dato.CantidadSolicitada}}">
                                                     <input type="hidden" name="id[]" value="{{Dato.IDCorral_id}}">
                                                 </td>
+                                                <td colspan="3">
+                                                    <input type="number" name="cantidadAnimales[]" class="form-control input"
+                                                        value="{{Dato.CantidadAnimales}}">
+                                                    
+                                                </td>                                                
                                                 <td colspan="3">
                                                     <span class="fs-16 text-black font-w400">
                                                         <select class="select2 form-control col-12" name="seSirve[]"
